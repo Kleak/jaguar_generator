@@ -49,6 +49,16 @@ class InterceptorClassPreWriter {
           return "request.headers.value('${inp.key}')";
         } else if (inp is InputHeaders) {
           return 'request.headers';
+        } else if (inp is InputPathParams) {
+          //TODO what if it is dynamic
+          //TODO what if it has no FromPathParam constructor
+          //TODO validate
+          return 'new ' + inp.type.displayName + '.FromPathParam(pathParams)';
+        } else if (inp is InputQueryParams) {
+          //TODO what if it is dynamic
+          //TODO what if it has no FromQueryParam constructor
+          //TODO validate
+          return 'new ' + inp.type.displayName + '.FromQueryParam(queryParams)';
         }
       }).join(", ");
       sb.write(params);
@@ -59,11 +69,6 @@ class InterceptorClassPreWriter {
       final String paramsStr = pre.nonInputParams
           .map((ParameterElement param) => new ParameterElementWrap(param))
           .map((ParameterElementWrap param) {
-        if (param.name == 'pathParams') {
-          return 'pathParams';
-        } else if (param.name == 'queryParams') {
-          return 'queryParams';
-        }
         return 'null';
       }).join(',');
 

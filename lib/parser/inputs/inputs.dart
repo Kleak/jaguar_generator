@@ -30,11 +30,19 @@ class InputHeaders implements Input {}
 class InputCookies implements Input {}
 
 class InputPathParams implements Input {
+  final bool validate;
+
   DartTypeWrap type;
+
+  InputPathParams(this.validate);
 }
 
 class InputQueryParams implements Input {
+  final bool validate;
+
   DartTypeWrap type;
+
+  InputQueryParams(this.validate);
 }
 
 /// Holds information about a single input to an interceptor method or function
@@ -86,9 +94,9 @@ Input createInput(ElementAnnotation annot) {
     } else if (instance is ant.InputCookies) {
       return new InputCookies();
     } else if (instance is ant.InputPathParams) {
-      return new InputPathParams();
+      return new InputPathParams(instance.validate);
     } else if (instance is ant.InputQueryParams) {
-      return new InputQueryParams();
+      return new InputQueryParams(instance.validate);
     }
   } catch (e) {
     //Do nothing

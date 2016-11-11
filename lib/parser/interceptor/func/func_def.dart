@@ -39,6 +39,29 @@ class InterceptorFuncDef {
         .map(createInput)
         .where((Input instance) => instance is Input)
         .forEach((Input inp) => inputs.add(inp));
+
+    _validate();
+  }
+
+  void _validate() {
+    if (_method.requiredParameters.length < inputs.length) {
+      throw new Exception(
+          "Inputs and parameters to interceptor does not match!");
+    }
+
+    for (int index = 0; index < inputs.length; index++) {
+      ParameterElement param =
+          _method.requiredParameters[_numDefaultInputs + index];
+      Input input = inputs[index];
+
+      if (input is InputPathParams) {
+        //TODO has FromPathParam constructor and implements PathParams
+        input.type = new DartTypeWrap(param.type);
+      } else if (input is InputQueryParams) {
+        //TODO has FromQueryParam constructor and implements QueryParams
+        input.type = new DartTypeWrap(param.type);
+      }
+    }
   }
 
   bool get needsHttpRequest {
@@ -64,15 +87,8 @@ class InterceptorFuncDef {
     }
   }
 
-  ParameterElementWrap get queryParamInjectionParam => nonInputParams
-      .map((ParameterElement param) => new ParameterElementWrap(param))
-      .firstWhere((ParameterElementWrap param) => param.name == 'queryParams',
-          orElse: () => null);
-
-  bool get needsQueryParamInjection => queryParamInjectionParam != null;
-
   bool get shouldKeepQueryParam {
-    if (needsQueryParamInjection) {
+    if (inputs.any((Input inp) => inp is InputQueryParams)) {
       return true;
     }
 

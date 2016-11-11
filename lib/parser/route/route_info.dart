@@ -75,6 +75,12 @@ class RouteInfo {
                 "Inputs and parameters to route does not match!");
           }
         }
+      } else if (input is InputPathParams) {
+        //TODO has FromPathParam constructor and implements PathParams
+        input.type = new DartTypeWrap(param.type);
+      } else if (input is InputQueryParams) {
+        //TODO has FromQueryParam constructor and implements QueryParams
+        input.type = new DartTypeWrap(param.type);
       }
     }
 
@@ -135,22 +141,8 @@ class RouteInfo {
 
   bool get areOptionalParamsPositional => _method.areOptionalParamsPositional;
 
-  ParameterElementWrap get pathParamInjectionParam => nonInputParams
-      .map((ParameterElement param) => new ParameterElementWrap(param))
-      .firstWhere((ParameterElementWrap param) => param.name == 'pathParams',
-          orElse: () => null);
-
-  bool get needsPathParamInjection => pathParamInjectionParam != null;
-
-  ParameterElementWrap get queryParamInjectionParam => nonInputParams
-      .map((ParameterElement param) => new ParameterElementWrap(param))
-      .firstWhere((ParameterElementWrap param) => param.name == 'queryParams',
-          orElse: () => null);
-
-  bool get needsQueryParamInjection => queryParamInjectionParam != null;
-
   bool get shouldKeepQueryParam {
-    if (needsQueryParamInjection) {
+    if (inputs.any((Input inp) => inp is InputQueryParams)) {
       return true;
     }
 

@@ -5,60 +5,12 @@ class RouteCallWriter {
 
   RouteCallWriter(this.route);
 
-  String _generatePathParamInjector() {
-    StringBuffer sb = new StringBuffer();
-
-    if (route.needsPathParamInjection) {
-      if (!route.pathParamInjectionParam.type.isDynamic) {
-        sb.write(route.pathParamInjectionParam.type.name);
-        sb.write(" injectPathParam = new ");
-        sb.writeln(route.pathParamInjectionParam.type.name +
-            '.FromPathParam(pathParams);');
-      } else {
-        sb.writeln('final injectPathParam = pathParams;');
-      }
-
-      if (route.route.validatePathParams) {
-        sb.writeln(
-            'if(injectPathParam is Validatable) {injectPathParam.validate();}');
-      }
-    }
-
-    return sb.toString();
-  }
-
-  String _generateQueryParamInjector() {
-    StringBuffer sb = new StringBuffer();
-
-    if (route.needsQueryParamInjection) {
-      if (!route.queryParamInjectionParam.type.isDynamic) {
-        sb.write(route.queryParamInjectionParam.type.name);
-        sb.write(" injectQueryParam = new ");
-        sb.write(route.pathParamInjectionParam.type.name +
-            '.FromQueryParam(queryParams);');
-      } else {
-        sb.writeln('final injectQueryParam = queryParams;');
-      }
-
-      if (route.route.validateQueryParams) {
-        sb.writeln(
-            'if(injectQueryParam is Validatable) {injectQueryParam.validate();}');
-      }
-    }
-
-    return sb.toString();
-  }
-
   String generate() {
     StringBuffer sb = new StringBuffer();
 
     if (route.isWebSocket) {
       sb.write("WebSocket ws = await WebSocketTransformer.upgrade(request);");
     }
-
-    sb.write(_generatePathParamInjector());
-
-    sb.write(_generateQueryParamInjector());
 
     if (!route.isWebSocket) {
       if (!route.returnsVoid) {
@@ -99,6 +51,16 @@ class RouteCallWriter {
           return "request.headers.value('${inp.key}')";
         } else if (inp is InputHeaders) {
           return 'request.headers';
+        } else if (inp is InputPathParams) {
+          //TODO what if it is dynamic
+          //TODO what if it has no FromPathParam constructor
+          //TODO validate
+          return 'new ' + inp.type.displayName + '.FromPathParam(pathParams)';
+        } else if (inp is InputQueryParams) {
+          //TODO what if it is dynamic
+          //TODO what if it has no FromQueryParam constructor
+          //TODO validate
+          return 'new ' + inp.type.displayName + '.FromQueryParam(queryParams)';
         }
       }).join(", ");
       sb.write(params);
@@ -110,11 +72,6 @@ class RouteCallWriter {
           .map((ParameterElement param) => new ParameterElementWrap(param))
           .map((ParameterElementWrap param) {
         if (!param.type.isBuiltin) {
-          if (param.name == 'pathParams') {
-            return 'injectPathParam';
-          } else if (param.name == 'queryParams') {
-            return 'injectQueryParam';
-          }
           return 'null';
         }
         String build = _getStringTo(param);
