@@ -11,6 +11,9 @@ class InterceptorClassPostWriter {
     StringBuffer sb = new StringBuffer();
 
     if (!info.dual.post.returnsVoid) {
+      if (info.dual.post.returnsResponse) {
+        sb.write("rRouteResponse = ");
+      }
       if (info.dual.post.returnsFuture) {
         sb.write("await ");
       }
@@ -26,11 +29,7 @@ class InterceptorClassPostWriter {
     if (info.dual.post.inputs.length != 0) {
       final String params = info.dual.post.inputs.map((Input inp) {
         if (inp is InputInterceptor) {
-          if (route.returnsResponse && inp.isRouteResponse) {
-            return inp.genName + '.value';
-          } else {
-            return inp.genName;
-          }
+          return inp.genName;
         } else if (inp is InputCookie) {
           return "request.cookies.firstWhere((cookie) => cookie.name == '${inp.key}', orElse: () => null)?.value";
         } else if (inp is InputCookies) {
