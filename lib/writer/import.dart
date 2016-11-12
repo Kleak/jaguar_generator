@@ -98,6 +98,10 @@ class Writer {
           "match = routes[$i].match(request.uri.path, request.method, prefix, pathParams);");
       sb.writeln("if (match) {");
 
+      if (!routes[i].isWebSocket) {
+        sb.writeln("Response rRouteResponse = new Response(null);");
+      }
+
       if (routes[i].exceptions.length != 0) {
         sb.writeln("try {");
       }
@@ -113,6 +117,10 @@ class Writer {
 
         RouteExceptionWriter exceptWriter = new RouteExceptionWriter(routes[i]);
         sb.write(exceptWriter.generate());
+      }
+
+      if (!routes[i].isWebSocket) {
+        sb.writeln('await rRouteResponse.writeResponse(request.response);');
       }
 
       sb.writeln("return true;");
@@ -137,24 +145,8 @@ class Writer {
   }
 
   void _writeRouteCall(RouteInfo route) {
-    if (!route.isWebSocket) {
-      if (!route.returnsVoid) {
-        sb.write(route.returnTypeIntended.displayName + " rRouteResponse;");
-      }
-    }
-
     RouteCallWriter callWriter = new RouteCallWriter(route);
     sb.write(callWriter.generate());
-
-    if (route.returnsResponse) {
-      DefaultResponseWriterResponse responseWriter =
-          new DefaultResponseWriterResponse(route);
-      sb.write(responseWriter.generate());
-    } else {
-      DefaultResponseWriterRaw responseWriter =
-          new DefaultResponseWriterRaw(route);
-      sb.write(responseWriter.generate());
-    }
   }
 
   void _writePreInterceptors(RouteInfo route) {
