@@ -14,7 +14,20 @@ class RouteCallWriter {
 
     if (!route.isWebSocket) {
       if (!route.returnsVoid) {
-        sb.write("rRouteResponse = ");
+        if (route.returnsResponse) {
+          sb.write("rRouteResponse = ");
+        } else {
+          if (route.route.statusCode is int) {
+            sb.writeln(
+                "rRouteResponse.statusCode = ${route.route.statusCode};");
+          }
+          if (route.route.headers is Map<String, String>) {
+            route.route.headers.forEach((String key, String value) {
+              sb.writeln("rRouteResponse.headers['$key'] = '$value';");
+            });
+          }
+          sb.write("rRouteResponse.value = ");
+        }
       }
     }
 
