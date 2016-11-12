@@ -21,7 +21,7 @@ class DefaultResponseWriterRaw {
     if (route.route.headers is Map) {
       Map<String, String> headers = route.route.headers;
       for (String key in headers.keys) {
-        sb.write(r'request.response.headers.add("');
+        sb.write(r'request.response.headers.set("');
         sb.write(key);
         sb.write(r'", "');
         sb.write(headers[key]);
@@ -53,7 +53,7 @@ class DefaultResponseWriterResponse {
     sb.writeln('if (rRouteResponse.headers is Map) {');
     sb.writeln('  for (String key in rRouteResponse.headers.keys) {');
     sb.writeln(
-        '    request.response.headers.add(key,rRouteResponse.headers[key]);');
+        '    request.response.headers.set(key,rRouteResponse.headers[key]);');
     sb.writeln('  }');
     sb.writeln('}');
 
