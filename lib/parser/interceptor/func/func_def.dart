@@ -23,6 +23,9 @@ class InterceptorFuncDef {
     return returnType.flattenFutures(returnType.element.context.typeSystem);
   }
 
+  bool get returnsResponse => new DartTypeWrap(returnsFutureFlattened)
+      .compare('Response', 'jaguar.src.http.response');
+
   /// Inputs declared on the interceptor
   List<Input> inputs = <Input>[];
 
