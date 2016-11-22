@@ -58,7 +58,7 @@ class RouteInfo {
         InterceptorInfo interc =
             interceptors.firstWhere((InterceptorInfo info) {
           if (info is InterceptorClassInfo) {
-            return input.resultFrom.isType(info.interceptor.type) &&
+            return input.resultFrom.isAssignableTo(info.interceptor.type) &&
                 input.id == info.id;
           } else {
             //TODO handle function interceptors
