@@ -8,7 +8,9 @@ part of jaguar.example.silly;
 // **************************************************************************
 
 abstract class _$JaguarExampleApi implements RequestHandler {
-  static const List<RouteBase> routes = const <RouteBase>[const Get('/ping')];
+  static const List<RouteBase> routes = const <RouteBase>[
+    const Get(path: '/ping')
+  ];
 
   String ping(User model);
 
@@ -17,6 +19,7 @@ abstract class _$JaguarExampleApi implements RequestHandler {
     PathParams pathParams = new PathParams();
     bool match = false;
 
+//Handler for ping
     match =
         routes[0].match(request.uri.path, request.method, prefix, pathParams);
     if (match) {
@@ -27,7 +30,7 @@ abstract class _$JaguarExampleApi implements RequestHandler {
       User rUserProvider = iUserProvider.pre();
       WithParam iWithParam = new WithParam(
         params: const {#param: ParamUsesInjection},
-        param: new ParamUsesInjection(),
+        param: new ParamUsesInjection(rUserProvider),
       );
       iWithParam.pre();
       rRouteResponse.statusCode = 200;

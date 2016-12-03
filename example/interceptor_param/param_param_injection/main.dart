@@ -15,7 +15,6 @@ class User {
   const User(this.name, this.password);
 }
 
-@InterceptorClass()
 class UserProvider extends Interceptor {
   final User model;
 
@@ -35,9 +34,9 @@ class InstantiateParam {
   const InstantiateParam(this.param);
 }
 
-@InterceptorClass()
 class WithParam extends Interceptor {
-  const WithParam({ParamUsesInjection param, Map<Symbol, Type> params}): super(params: params);
+  const WithParam({ParamUsesInjection param, Map<Symbol, Type> params})
+      : super(params: params);
 
   void pre() {}
 }
@@ -48,7 +47,7 @@ const User user = const User('teja', 'wont be this anyway');
 @RouteGroup(path: '/api')
 class ExampleApi extends Object with _$JaguarExampleApi {
   /// Example of basic route
-  @Get('/ping')
+  @Get(path: '/ping')
   @UserProvider(user)
   @WithParam(params: const {#param: ParamUsesInjection})
   @Input(UserProvider)

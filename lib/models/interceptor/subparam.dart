@@ -1,13 +1,11 @@
 part of jaguar_generator.models;
 
-class SubParam {}
-
-class InjectedSubParam implements SubParam {
+class InjectedParam {
   DartTypeWrap type;
 
   DartTypeWrap injector;
 
   String id;
 
-  String get injectedString => 'r' + injector.name + id??'';
+  String get injectedString => 'r' + injector.name + id ?? '';
 }

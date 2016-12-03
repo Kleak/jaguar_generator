@@ -1,13 +1,53 @@
 part of jaguar_generator.models;
 
-class InterceptorConstructor {
-  List<InterceptorParam> required;
+class InterceptorCreator {
+  final List<InterceptorRequiredParam> required;
 
-  List<InterceptorParam> optional;
+  final List<InterceptorNamedParam> optional;
+
+  InterceptorCreator(this.required, this.optional);
+}
+
+class InterceptorPre {
+  bool needsHttpRequest;
+
+  String returnType;
+
+  bool isAsync;
+
+  bool isVoid;
+
+  bool isResultUseful;
+
+  List<Input> inputs;
+}
+
+class InterceptorPost {
+  bool needsHttpRequest;
+
+  bool returnsResponse;
+
+  bool isAsync;
+
+  List<Input> inputs;
 }
 
 class Interceptor {
-  InterceptorConstructor constructor;
+  String name;
+
+  String id;
+
+  InterceptorCreator creator;
+
+  InterceptorPre pre;
+
+  InterceptorPost post;
 
   Interceptor();
+
+  String get _genBaseName => name + (id ?? '');
+
+  String get genInstanceName => 'i$_genBaseName';
+
+  String get genReturnVarName => 'r$_genBaseName';
 }

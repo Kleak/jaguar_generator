@@ -1,46 +1,91 @@
 part of jaguar_generator.models;
 
-class RouteItem {
-  String name;
-
-  String writeValue;
+abstract class PathParam {
+  String get writeVal;
 }
 
-class RoutePrototype {
-  String writeValue;
+class PathParamNull implements PathParam {
+  const PathParamNull();
+
+  String get writeVal => 'null';
 }
 
-class RouteParams {}
+class PathParamKeyed implements PathParam {
+  final String key;
+
+  final String modifierFunc;
+
+  const PathParamKeyed(this.key, this.modifierFunc);
+
+  String get writeVal => "$modifierFunc(pathParams.getField('$key'))";
+}
+
+class QueryParam {
+  final String key;
+
+  final String modifierFunc;
+
+  final dynamic defaultVal;
+
+  const QueryParam(this.key, this.modifierFunc, this.defaultVal);
+
+  String get writeVal {
+    String ret = "$key: $modifierFunc(queryParams.getField('$key'))";
+
+    if (defaultVal != null) {
+      ret += '??$defaultVal';
+    }
+
+    return ret;
+  }
+}
 
 class RouteMethod {
   String name;
 
   String returnType;
 
-  List<RouteParams> required;
+  bool returnsVoid;
 
-  List<RouteParams> optional;
+  bool returnsResponse;
+
+  bool isAsync;
+
+  List<Input> inputs;
+
+  List<PathParam> pathParams;
+
+  List<QueryParam> queryParams;
 }
 
 class Route {
-  RouteItem item;
+  String instantiation;
 
-  RoutePrototype prototype;
+  String prototype;
+
+  ant.RouteBase value;
+
+  bool isWebsocket;
+
+  bool needsHttpRequest;
+
+  List<Interceptor> interceptors = <Interceptor>[];
 
   RouteMethod method;
 
-  List<Interceptor> interceptors;
-}
+  List<ExceptionHandler> exceptions = <ExceptionHandler>[];
 
-class Upper {
-  String name;
+  /* TODO
+  Map<String, bool> _interceptorResultUsed = {};
 
-  List<Route> routes;
-
-  List<Group> groups;
+  bool isInterceptorResultUsed(Interceptor inter) =>
+      _interceptorResultUsed.containsKey(inter.genReturnVarName);
+      */
 }
 
 class Group {
+  String path;
+
   String type;
 
   String name;

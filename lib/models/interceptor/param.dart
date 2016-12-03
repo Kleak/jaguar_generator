@@ -1,25 +1,27 @@
 part of jaguar_generator.models;
 
-abstract class InterceptorParam {}
+class InterceptorRequiredParam {
+  final String source;
 
-class InterceptorParamInstantiatedConstructor {
-  List<SubParam> required;
-
-  List<SubParam> optional;
-
-  InterceptorParamInstantiatedConstructor();
+  InterceptorRequiredParam(this.source);
 }
 
-class InterceptorParamInstantiated implements InterceptorParam {
-  DartTypeWrap type;
-
-  InterceptorParamInstantiatedConstructor constructor;
-
-  InterceptorParamInstantiated();
+abstract class InterceptorNamedParam {
+  String get key;
 }
 
-class InterceptorParamReproduced implements InterceptorParam {
-  final String string;
+class InterceptorNamedParamProvided implements InterceptorNamedParam {
+  final String key;
 
-  InterceptorParamReproduced(this.string);
+  final String type;
+
+  final List<Input> inputs;
+
+  InterceptorNamedParamProvided(this.key, this.type, this.inputs);
+}
+
+class InterceptorNamedParamState implements InterceptorNamedParam {
+  String get key => 'state';
+
+  InterceptorNamedParamState();
 }
