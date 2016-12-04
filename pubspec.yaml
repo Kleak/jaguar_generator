@@ -13,8 +13,8 @@ dependencies:
     path: ../jaguar
     # git: https://github.com/Jaguar-dart/jaguar.git
   source_gen_help:
-    # path: ../source_gen_help
-    git: https://github.com/tejainece/source_gen_help.git
+    path: ../source_gen_help
+    # git: https://github.com/tejainece/source_gen_help.git
 
 dev_dependencies:
   test: 0.12.15+10

@@ -1,6 +1,6 @@
 part of jaguar_generator.validator;
 
-class ValidatorOfInterceptorFuncDef {
+class ValidatorOfInterceptorFuncDef implements Validator {
   final ParsedInterceptorFuncDef func;
 
   ValidatorOfInterceptorFuncDef(this.func);

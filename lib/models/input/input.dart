@@ -58,3 +58,9 @@ class InputQueryParams implements Input {
 
   String get writeVal => 'new $type.FromQueryParam(queryParams)';
 }
+
+class InputRouteResponse implements Input {
+  const InputRouteResponse();
+
+  String get writeVal => 'rRouteResponse';
+}

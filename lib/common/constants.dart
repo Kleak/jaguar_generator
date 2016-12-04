@@ -8,9 +8,6 @@ const NamedElement kJaguarResponse =
 const NamedElement kHttpRequest =
     const NamedElementImpl.Make('HttpRequest', 'dart.io');
 
-const NamedElement kInputRouteResponse =
-    const NamedElementImpl.Make('RouteResponse', kLibraryAnnotation);
-
 const NamedElement kTypeInput =
     const NamedElementImpl.Make('Input', kLibraryAnnotation);
 

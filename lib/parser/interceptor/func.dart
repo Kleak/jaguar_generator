@@ -26,20 +26,8 @@ class ParsedInterceptorFuncDef extends Object
   ParsedInterceptorFuncDef(this.method, this.inputs);
 
   factory ParsedInterceptorFuncDef.Make(MethodElementWrap method) {
-    List<ParsedInput> inputs = <ParsedInput>[];
-
-    int paramIdx = getNumDefaultInputs(_needsHttpRequest(method));
-    for (int annotIdx = 0; annotIdx < method.metadata.length; annotIdx++) {
-      AnnotationElementWrap annot = method.metadata[annotIdx];
-
-      if (!isAnnotationInput(annot)) {
-        continue;
-      }
-
-      inputs.add(createInput(annot, method.parameters[paramIdx]));
-
-      paramIdx++;
-    }
+    List<ParsedInput> inputs = ParsedInput.detectInputs(method,
+        method.parameters, getNumDefaultInputs(_needsHttpRequest(method)));
 
     return new ParsedInterceptorFuncDef(method, inputs);
   }

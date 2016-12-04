@@ -183,6 +183,8 @@ class ToModelUpper {
         inputs.add(new InputPathParams(input.type.displayName));
       } else if (input is ParsedInputQueryParams) {
         inputs.add(new InputQueryParams(input.type.displayName));
+      } else if (input is ParsedInputRouteResponse) {
+        inputs.add(new InputRouteResponse());
       }
     }
 

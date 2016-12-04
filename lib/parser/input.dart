@@ -62,6 +62,10 @@ class ParsedInputQueryParams implements ParsedInput {
   ParsedInputQueryParams(this.type, this.validate);
 }
 
+class ParsedInputRouteResponse implements ParsedInput {
+  ParsedInputRouteResponse();
+}
+
 /// Input that requests results from an Interceptor
 class ParsedInputInterceptor implements ParsedInput {
   /// Results of which interceptor must be injected to this input
@@ -74,9 +78,6 @@ class ParsedInputInterceptor implements ParsedInput {
   String toString() => genName;
 
   String get genName => 'r' + resultFrom.name + (id ?? '');
-
-  bool get isRouteResponse =>
-      resultFrom.compareNamedElement(kInputRouteResponse);
 }
 
 ParsedInputInterceptor instantiateInputAnnotation(AnnotationElementWrap annot) {
@@ -107,6 +108,8 @@ bool isAnnotationInput(AnnotationElementWrap annot) {
     return true;
   } else if (instance is ant.InputQueryParams) {
     return true;
+  } else if (instance is ant.InputRouteResponse) {
+    return true;
   }
 
   return annot.compareNamedElement(kTypeInput);
@@ -128,6 +131,8 @@ ParsedInput createInput(
     return new ParsedInputPathParams(param.type, instance.validate);
   } else if (instance is ant.InputQueryParams) {
     return new ParsedInputQueryParams(param.type, instance.validate);
+  } else if (instance is ant.InputRouteResponse) {
+    return new ParsedInputRouteResponse();
   }
 
   return instantiateInputAnnotation(annot);

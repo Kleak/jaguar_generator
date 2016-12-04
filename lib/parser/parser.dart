@@ -53,26 +53,25 @@ class ParsedUpper {
 
   void _collectRoutes() {
     for (MethodElementWrap method in upper.methods) {
-      AnnotationElementWrap routeAnnot = ParsedRoute.detectRoute(method);
+      ParsedRoute route = ParsedRoute.detectRoute(this, method);
 
-      if (routeAnnot == null) {
-        return null;
+      if (route == null) {
+        continue;
       }
 
-      routes.add(new ParsedRoute(this, method, routeAnnot));
+      routes.add(route);
     }
   }
 
   void _collectGroups() {
     for (FieldElement field in upper.fields) {
-      ant.Group group = ParsedGroup.detectGroup(field);
+      ParsedGroup group = ParsedGroup.detectGroup(field);
 
       if (group == null) {
         continue;
       }
 
-      DartTypeWrap type = new DartTypeWrap(field.type);
-      groups.add(new ParsedGroup(group, type, field.name));
+      groups.add(group);
     }
   }
 }
@@ -85,4 +84,6 @@ class GeneratorException {
   final String message;
 
   GeneratorException(this.filename, this.line, this.message);
+
+  String toString() => message;
 }

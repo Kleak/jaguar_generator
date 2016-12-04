@@ -74,13 +74,6 @@ class Route {
   RouteMethod method;
 
   List<ExceptionHandler> exceptions = <ExceptionHandler>[];
-
-  /* TODO
-  Map<String, bool> _interceptorResultUsed = {};
-
-  bool isInterceptorResultUsed(Interceptor inter) =>
-      _interceptorResultUsed.containsKey(inter.genReturnVarName);
-      */
 }
 
 class Group {

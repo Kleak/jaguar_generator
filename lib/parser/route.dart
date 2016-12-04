@@ -1,11 +1,11 @@
 part of jaguar.generator.parser.route;
 
 class ParsedRoute extends Object with ChainFunction {
-  ParsedUpper upper;
+  final ParsedUpper upper;
 
-  MethodElementWrap method;
+  final MethodElementWrap method;
 
-  AnnotationElementWrap routeAnnot;
+  final AnnotationElementWrap routeAnnot;
 
   ant.RouteBase item;
 
@@ -32,23 +32,14 @@ class ParsedRoute extends Object with ChainFunction {
 
   //Detects inputs
   void _detectInputs() {
-    int paramIdx = numDefaultInputs;
-    for (int annotIdx = 0; annotIdx < method.metadata.length; annotIdx++) {
-      AnnotationElementWrap annot = method.metadata[annotIdx];
+    inputs.addAll(
+        ParsedInput.detectInputs(method, method.parameters, numDefaultInputs));
 
-      if (!isAnnotationInput(annot)) {
-        continue;
-      }
-
-      ParsedInput inp = createInput(annot, method.parameters[paramIdx]);
-      inputs.add(inp);
-
+    inputs.forEach((inp) {
       if (inp is ParsedInputInterceptor) {
         _interceptorResultUsed[inp.genName] = true;
       }
-
-      paramIdx++;
-    }
+    });
   }
 
   bool get canHaveQueryParams => true;
@@ -83,10 +74,9 @@ class ParsedRoute extends Object with ChainFunction {
       _interceptorResultUsed.containsKey(inter.instance.returnVarName);
 
   /// Finds route annotation on the given method
-  static AnnotationElementWrap detectRoute(MethodElementWrap element) {
+  static ParsedRoute detectRoute(ParsedUpper upper, MethodElementWrap element) {
     List<AnnotationElementWrap> annots = element.metadata
-        .where((AnnotationElementWrap annot) =>
-            annot.instantiated is ant.RouteBase)
+        .where((annot) => annot.instantiated is ant.RouteBase)
         .toList();
 
     if (annots.length == 0) {
@@ -100,6 +90,6 @@ class ParsedRoute extends Object with ChainFunction {
       throw new GeneratorException('', 0, sb.toString());
     }
 
-    return annots.first;
+    return new ParsedRoute(upper, element, annots.first);
   }
 }

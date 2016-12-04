@@ -63,6 +63,8 @@ class ParsedInterceptor {
   /// Id specified for the interceptor instantiation
   String get id => instance.id;
 
+  String get resultName => 'r${clazz.name}' + (id ?? '');
+
   /// Constructor of the interceptor
   ConstructorElementWrap get constructor => clazz.unnamedConstructor;
 
