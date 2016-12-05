@@ -16,3 +16,9 @@ const NamedElement kTypeInterceptor =
 
 const NamedElement kTypeExceptionHandler =
     const NamedElementImpl.Make('ExceptionHandler', kLibraryAnnotation);
+
+const NamedElement kTypeMakeParamFromType =
+    const NamedElementImpl.Make('MakeParamFromType', kLibraryAnnotation);
+
+const NamedElement kTypeMakeParamFromMethod =
+    const NamedElementImpl.Make('MakeParamFromMethod', kLibraryAnnotation);

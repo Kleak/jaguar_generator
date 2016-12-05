@@ -29,7 +29,7 @@ class ApiGenerator extends GeneratorForAnnotation<ant.Api> {
 
     ClassElementWrap clazz = new ClassElementWrap(element);
 
-    print("Generating for api class ${clazz.name} ...");
+    print("Generating for api class ${clazz.name} in ${buildStep.input.id} ...");
 
     // Parse source code
     ParsedUpper parsed = new ParsedUpper(clazz, api.path)..parse();

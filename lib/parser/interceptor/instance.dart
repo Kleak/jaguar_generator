@@ -1,26 +1,5 @@
 part of jaguar.generator.parser.route;
 
-class ParsedInstantiated {
-  final ClassElementWrap clazz;
-
-  final List<ParsedInput> inputs;
-
-  ParsedInstantiated(this.clazz, this.inputs);
-
-  static ParsedInstantiated make(DartTypeWrap type) {
-    ClassElementWrap clazz = type.clazz;
-
-    List<ParsedInput> inputs = ParsedInput.detectInputs(
-        clazz.unnamedConstructor,
-        clazz.unnamedConstructor.requiredParameters,
-        0);
-
-    return new ParsedInstantiated(clazz, inputs);
-  }
-
-  static _detectInputs(WithMetadata host) {}
-}
-
 class ParsedInterceptorInstance extends NamedElement {
   final AnnotationElementWrap element;
 
@@ -32,7 +11,7 @@ class ParsedInterceptorInstance extends NamedElement {
 
   final String id;
 
-  final Map<String, ParsedInstantiated> params;
+  final Map<String, ParsedMakeParam> params;
 
   ParsedInterceptorInstance(this.element, this.type, this.id, this.params);
 
@@ -45,21 +24,20 @@ class ParsedInterceptorInstance extends NamedElement {
     DartTypeWrap type = new DartTypeWrap(constVal.type);
     String id = constVal.getField('(super)')?.getField('id')?.toStringValue();
 
-    Map<String, ParsedInstantiated> params = {};
+    Map<String, ParsedMakeParam> params = {};
 
-    DartObject object = constVal.getField('(super)')?.getField('params');
+    DartObject object = constVal.getField('(super)')?.getField('makeParams');
     if (object is DartObject) {
       Map map = object.toMapValue();
 
       if (map is Map) {
         map.forEach((DartObject key, DartObject val) {
           final String name = key.toSymbolValue();
-          if (name == 'state' || name == 'params') {
+          if (name == 'state' || name == 'makeParams') {
             throw new Exception(
                 'Cannot provide state and params param to interceptor!');
           }
-          params[key.toSymbolValue()] =
-              ParsedInstantiated.make(new DartTypeWrap(val.toTypeValue()));
+          params[key.toSymbolValue()] = ParsedMakeParam.detect(val);
         });
       }
     }

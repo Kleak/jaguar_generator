@@ -21,10 +21,15 @@ class InterceptorCreateWriter {
 
     for (InterceptorNamedParam param in _c.optional) {
       sb.write('${param.key}: ');
-      if (param is InterceptorNamedParamProvided) {
+      if (param is InterceptorNamedMakeParamType) {
         sb.write('new ${param.type}(');
         sb.write(param.inputs.map((inp) => inp.writeVal).join(','));
         sb.write(')');
+      } else if (param is InterceptorNamedMakeParamMethod) {
+        if(param.isAsync) {
+          sb.write('await ');
+        }
+        sb.write('${param.methodName}()');
       } else if (param is InterceptorNamedParamState) {
         sb.write('${_i.name}.createState()');
       }

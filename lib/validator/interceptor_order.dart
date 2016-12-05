@@ -25,18 +25,9 @@ class InterceptorOrderValidator implements Validator {
         });
       }
 
-      if (inter.post != null) {
-        inter.post.inputs
-            .where((inp) => inp is ParsedInputInterceptor)
-            .forEach((ParsedInputInterceptor inp) {
-          if (!interceptorsAlreadyDefined.containsKey(inp.genName)) {
-            throw new GeneratorException(
-                '', 0, 'The interceptor ${inp.genName} is not defined yet!');
-          }
-        });
-      }
-
-      inter.instance.params.values.forEach((ParsedInstantiated inst) {
+      inter.instance.params.values
+          .where((ParsedMakeParam param) => param is ParsedMakeParamType)
+          .forEach((ParsedMakeParamType inst) {
         inst.inputs
             .where((inp) => inp is ParsedInputInterceptor)
             .forEach((ParsedInputInterceptor inp) {

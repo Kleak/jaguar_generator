@@ -3,7 +3,6 @@ library jaguar.generator.parser.route;
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/src/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
-import 'package:source_gen/src/annotation.dart';
 import 'package:analyzer/dart/constant/value.dart';
 import 'package:analyzer/dart/ast/ast.dart';
 
@@ -18,7 +17,8 @@ part 'input.dart';
 part 'route.dart';
 part 'interceptor/func.dart';
 part 'interceptor/interceptor.dart';
-part 'interceptor/interceptor_help.dart';
+part 'interceptor/make_param.dart';
+part 'interceptor/instance.dart';
 
 class ParsedUpper {
   final ClassElementWrap upper;

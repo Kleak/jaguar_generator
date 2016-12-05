@@ -10,14 +10,24 @@ abstract class InterceptorNamedParam {
   String get key;
 }
 
-class InterceptorNamedParamProvided implements InterceptorNamedParam {
+class InterceptorNamedMakeParamType implements InterceptorNamedParam {
   final String key;
 
   final String type;
 
   final List<Input> inputs;
 
-  InterceptorNamedParamProvided(this.key, this.type, this.inputs);
+  InterceptorNamedMakeParamType(this.key, this.type, this.inputs);
+}
+
+class InterceptorNamedMakeParamMethod implements InterceptorNamedParam {
+  final String key;
+
+  final String methodName;
+
+  final bool isAsync;
+
+  InterceptorNamedMakeParamMethod(this.key, this.methodName, this.isAsync);
 }
 
 class InterceptorNamedParamState implements InterceptorNamedParam {

@@ -30,7 +30,6 @@ abstract class _$JaguarExampleApi implements RequestHandler {
       User rUserProvider = iUserProvider.pre();
       WithParam iWithParam = new WithParam(
         params: const {#param: ParamUsesInjection},
-        param: new ParamUsesInjection(rUserProvider),
       );
       iWithParam.pre();
       rRouteResponse.statusCode = 200;

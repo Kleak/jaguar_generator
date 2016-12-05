@@ -35,8 +35,8 @@ class InstantiateParam {
 }
 
 class WithParam extends Interceptor {
-  const WithParam({ParamUsesInjection param, Map<Symbol, Type> params})
-      : super(params: params);
+  const WithParam({ParamUsesInjection param, Map<Symbol, MakeParam> makeParams})
+      : super(makeParams: makeParams);
 
   void pre() {}
 }

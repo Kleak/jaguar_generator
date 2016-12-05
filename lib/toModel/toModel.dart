@@ -131,10 +131,19 @@ class ToModelUpper {
 
       //Provided parameters
       for (String key in interceptor.instance.params.keys) {
-        ParsedInstantiated instantiated = interceptor.instance.params[key];
+        ParsedMakeParam instantiated = interceptor.instance.params[key];
 
-        opt.add(new InterceptorNamedParamProvided(
-            key, instantiated.clazz.name, _makeInputs(instantiated.inputs)));
+        if (instantiated is ParsedMakeParamType) {
+          opt.add(new InterceptorNamedMakeParamType(
+              key, instantiated.clazz.name, _makeInputs(instantiated.inputs)));
+        } else if (instantiated is ParsedMakeParamFromMethod) {
+          MethodElementWrap meth = upper.upper.methods.firstWhere(
+              (meth) => meth.name == instantiated.methodName,
+              orElse: () => null);
+
+          opt.add(new InterceptorNamedMakeParamMethod(
+              key, instantiated.methodName, meth.returnType.isAsync));
+        }
       }
 
       newInterceptor.creator = new InterceptorCreator(req, opt);

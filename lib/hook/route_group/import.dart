@@ -29,7 +29,7 @@ class RouteGroupGenerator extends GeneratorForAnnotation<ant.RouteGroup> {
 
     ClassElementWrap clazz = new ClassElementWrap(element);
 
-    print("Generating for RouteGroup class ${clazz.name} ...");
+    print("Generating for RouteGroup class ${clazz.name} in ${buildStep.input.id} ...");
 
     // Parse source code
     ParsedUpper parsed = new ParsedUpper(clazz, routeGroup.path)..parse();
