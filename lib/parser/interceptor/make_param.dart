@@ -6,11 +6,12 @@ abstract class ParsedMakeParam {
     print(objType);
     DartTypeWrap makeParam = new DartTypeWrap(objType);
 
-    if(makeParam.compareNamedElement(kTypeMakeParamFromType)) {
-      DartTypeWrap type = new DartTypeWrap(object.getField('type').toTypeValue());
+    if (makeParam.compareNamedElement(kTypeMakeParamFromType)) {
+      DartTypeWrap type =
+          new DartTypeWrap(object.getField('type').toTypeValue());
       return ParsedMakeParamType.make(type);
-    } else if(makeParam.compareNamedElement(kTypeMakeParamFromMethod)) {
-      String method = object.getField('method').toSymbolValue();
+    } else if (makeParam.compareNamedElement(kTypeMakeParamFromMethod)) {
+      String method = object.getField('methodName').toSymbolValue();
       return new ParsedMakeParamFromMethod(method);
     } else {
       throw new GeneratorException('', 0, 'Invalid makeParam entry!');

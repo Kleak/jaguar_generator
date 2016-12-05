@@ -49,7 +49,8 @@ class ExampleApi extends Object with _$JaguarExampleApi {
   /// Example of basic route
   @Get(path: '/ping')
   @UserProvider(user)
-  @WithParam(params: const {#param: ParamUsesInjection})
+  @WithParam(
+      makeParams: const {#param: const MakeParamFromType(ParamUsesInjection)})
   @Input(UserProvider)
   String ping(User model) => "You pinged me!";
 }

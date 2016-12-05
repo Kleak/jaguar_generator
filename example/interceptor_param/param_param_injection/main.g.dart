@@ -29,7 +29,8 @@ abstract class _$JaguarExampleApi implements RequestHandler {
       );
       User rUserProvider = iUserProvider.pre();
       WithParam iWithParam = new WithParam(
-        params: const {#param: ParamUsesInjection},
+        makeParams: const {#param: const MakeParamFromType(ParamUsesInjection)},
+        param: new ParamUsesInjection(rUserProvider),
       );
       iWithParam.pre();
       rRouteResponse.statusCode = 200;

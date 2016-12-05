@@ -26,7 +26,7 @@ class InterceptorCreateWriter {
         sb.write(param.inputs.map((inp) => inp.writeVal).join(','));
         sb.write(')');
       } else if (param is InterceptorNamedMakeParamMethod) {
-        if(param.isAsync) {
+        if (param.isAsync) {
           sb.write('await ');
         }
         sb.write('${param.methodName}()');
