@@ -9,17 +9,23 @@ import 'package:jaguar_generator/common/constants.dart';
 class ToModelUpper {
   ParsedUpper upper;
 
-  ToModelUpper(this.upper) {}
+  final Upper _ret = new Upper();
 
-  Upper toModel() {
-    Upper ret = new Upper();
+  ToModelUpper(this.upper) {
+    _perform();
+  }
 
-    ret.name = '_\$Jaguar' + upper.name;
-    ret.prefix = upper.path;
+  Upper toModel() => _ret;
+
+  void _perform() {
+    _ret.name = '_\$Jaguar' + upper.name;
+    _ret.prefix = upper.path;
 
     bool usesQueryParam = false;
 
     for (ParsedRoute route in upper.routes) {
+      _ret.addMethod(new Method(route.method.name, route.method.prototype));
+
       Route newRoute = new Route();
       newRoute.instantiation = 'const ' + route.instantiationString;
       newRoute.prototype = route.prototype;
@@ -35,7 +41,7 @@ class ToModelUpper {
         newRoute.interceptors.add(makeInterceptor(route, interceptor));
       }
 
-      ret.routes.add(newRoute);
+      _ret.routes.add(newRoute);
 
       {
         RouteMethod method = new RouteMethod();
@@ -92,7 +98,7 @@ class ToModelUpper {
       usesQueryParam = usesQueryParam || route.usesQueryParam;
     }
 
-    ret.usesQueryParam = usesQueryParam;
+    _ret.usesQueryParam = usesQueryParam;
 
     for (ParsedGroup group in upper.groups) {
       Group newGroup = new Group();
@@ -101,10 +107,8 @@ class ToModelUpper {
       newGroup.path = group.group.path;
       newGroup.type = group.type.displayName;
 
-      ret.groups.add(newGroup);
+      _ret.groups.add(newGroup);
     }
-
-    return ret;
   }
 
   //Creates interceptor model for given parsed interceptor
@@ -140,6 +144,8 @@ class ToModelUpper {
           MethodElementWrap meth = upper.upper.methods.firstWhere(
               (meth) => meth.name == instantiated.methodName,
               orElse: () => null);
+
+          _ret.addMethod(new Method(meth.name, meth.prototype));
 
           opt.add(new InterceptorNamedMakeParamMethod(
               key, instantiated.methodName, meth.returnType.isAsync));

@@ -27,7 +27,7 @@ class Writer {
 
     sb.writeln(_writeGroupDecl());
 
-    sb.writeln(_writeRoutePrototype());
+    sb.writeln(_writeMethodPrototypes());
 
     sb.writeln(_writeReqHandler());
 
@@ -57,11 +57,11 @@ class Writer {
     return sb.toString();
   }
 
-  String _writeRoutePrototype() {
+  String _writeMethodPrototypes() {
     StringBuffer sb = new StringBuffer();
 
-    _r.forEach((Route route) {
-      sb.writeln(route.prototype);
+    _u.methods.values.forEach((Method method) {
+      sb.writeln(method.prototype);
     });
 
     return sb.toString();

@@ -11,6 +11,14 @@ part 'route.dart';
 part 'input/input.dart';
 part 'exception.dart';
 
+class Method {
+  final String name;
+
+  final String prototype;
+
+  Method(this.name, this.prototype);
+}
+
 class Upper {
   String name;
 
@@ -21,4 +29,14 @@ class Upper {
   final List<Route> routes = [];
 
   final List<Group> groups = [];
+
+  final Map<String, Method> methods = {};
+
+  void addMethod(Method method) {
+    if(methods.containsKey(method.name)) {
+      return;
+    }
+
+    methods[method.name] = method;
+  }
 }
