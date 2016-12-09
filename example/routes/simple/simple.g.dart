@@ -30,8 +30,6 @@ abstract class _$JaguarSubGroup implements RequestHandler {
         routes[0].match(request.uri.path, request.method, prefix, pathParams);
     if (match) {
       Response rRouteResponse = new Response(null);
-      SampleInterceptor iSampleInterceptor = new SampleInterceptor();
-      iSampleInterceptor.pre();
       rRouteResponse.statusCode = 200;
       rRouteResponse.value = normal();
       await rRouteResponse.writeResponse(request.response);

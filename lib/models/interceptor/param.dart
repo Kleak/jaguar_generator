@@ -29,9 +29,3 @@ class InterceptorNamedMakeParamMethod implements InterceptorNamedParam {
 
   InterceptorNamedMakeParamMethod(this.key, this.methodName, this.isAsync);
 }
-
-class InterceptorNamedParamState implements InterceptorNamedParam {
-  String get key => 'state';
-
-  InterceptorNamedParamState();
-}

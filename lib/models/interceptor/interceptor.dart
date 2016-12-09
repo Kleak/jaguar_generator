@@ -1,11 +1,13 @@
 part of jaguar_generator.models;
 
 class InterceptorCreator {
+  final String name;
+
   final List<InterceptorRequiredParam> required;
 
   final List<InterceptorNamedParam> optional;
 
-  InterceptorCreator(this.required, this.optional);
+  InterceptorCreator(this.name, this.required, this.optional);
 }
 
 class InterceptorPre {

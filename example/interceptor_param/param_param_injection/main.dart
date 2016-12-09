@@ -15,6 +15,18 @@ class User {
   const User(this.name, this.password);
 }
 
+class WrapUserProvider implements RouteWrapper<UserProvider> {
+  final User model;
+
+  final String id;
+
+  final Map<Symbol, MakeParam> makeParams;
+
+  const WrapUserProvider({this.model, this.id, this.makeParams});
+
+  UserProvider createInterceptor() => new UserProvider(this.model);
+}
+
 class UserProvider extends Interceptor {
   final User model;
 
@@ -28,15 +40,20 @@ class ParamUsesInjection {
   ParamUsesInjection(User user);
 }
 
-class InstantiateParam {
-  final Symbol param;
+class WrapWithParam implements RouteWrapper<WithParam> {
+  final ParamUsesInjection param;
 
-  const InstantiateParam(this.param);
+  final String id;
+
+  final Map<Symbol, MakeParam> makeParams;
+
+  const WrapWithParam({this.param, this.id, this.makeParams});
+
+  WithParam createInterceptor() => new WithParam(this.param);
 }
 
 class WithParam extends Interceptor {
-  const WithParam({ParamUsesInjection param, Map<Symbol, MakeParam> makeParams})
-      : super(makeParams: makeParams);
+  const WithParam(ParamUsesInjection param);
 
   void pre() {}
 }
@@ -48,8 +65,8 @@ const User user = const User('teja', 'wont be this anyway');
 class ExampleApi extends Object with _$JaguarExampleApi {
   /// Example of basic route
   @Get(path: '/ping')
-  @UserProvider(user)
-  @WithParam(
+  @WrapUserProvider(model: user)
+  @WrapWithParam(
       makeParams: const {#param: const MakeParamFromType(ParamUsesInjection)})
   @Input(UserProvider)
   String ping(User model) => "You pinged me!";

@@ -33,7 +33,7 @@ class Upper {
   final Map<String, Method> methods = {};
 
   void addMethod(Method method) {
-    if(methods.containsKey(method.name)) {
+    if (methods.containsKey(method.name)) {
       return;
     }
 

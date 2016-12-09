@@ -116,26 +116,23 @@ class ToModelUpper {
       ParsedRoute route, ParsedInterceptor interceptor) {
     Interceptor newInterceptor = new Interceptor();
 
-    newInterceptor.name = interceptor.instance.name;
-    newInterceptor.id = interceptor.instance.id;
+    newInterceptor.name = interceptor.name;
+    newInterceptor.id = interceptor.id;
 
     //Make constructor
     {
       //Required parameter written in annotation
       List<InterceptorRequiredParam> req = [];
-      for (dynamic arg in interceptor.annotation.argumentAst) {
+      for (dynamic arg in interceptor.routeWrapper.annotation.argumentAst) {
         req.add(new InterceptorRequiredParam(arg.toString()));
       }
 
       //State parameter
       List<InterceptorNamedParam> opt = [];
-      if (interceptor.needsState && interceptor.canCreateState) {
-        opt.add(new InterceptorNamedParamState());
-      }
 
       //Provided parameters
-      for (String key in interceptor.instance.params.keys) {
-        ParsedMakeParam instantiated = interceptor.instance.params[key];
+      for (String key in interceptor.routeWrapper.params.keys) {
+        ParsedMakeParam instantiated = interceptor.routeWrapper.params[key];
 
         if (instantiated is ParsedMakeParamType) {
           opt.add(new InterceptorNamedMakeParamType(
@@ -152,7 +149,8 @@ class ToModelUpper {
         }
       }
 
-      newInterceptor.creator = new InterceptorCreator(req, opt);
+      newInterceptor.creator =
+          new InterceptorCreator(interceptor.routeWrapper.name, req, opt);
     }
 
     //Make pre

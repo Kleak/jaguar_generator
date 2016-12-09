@@ -24,14 +24,14 @@ abstract class _$JaguarExampleApi implements RequestHandler {
         routes[0].match(request.uri.path, request.method, prefix, pathParams);
     if (match) {
       Response rRouteResponse = new Response(null);
-      UserProvider iUserProvider = new UserProvider(
-        user,
-      );
+      UserProvider iUserProvider = new WrapUserProvider(
+        model: user,
+      )
+          .createInterceptor();
       User rUserProvider = iUserProvider.pre();
-      WithParam iWithParam = new WithParam(
+      WithParam iWithParam = new WrapWithParam(
         makeParams: const {#param: const MakeParamFromType(ParamUsesInjection)},
-        param: new ParamUsesInjection(rUserProvider),
-      );
+      ).createInterceptor();
       iWithParam.pre();
       rRouteResponse.statusCode = 200;
       rRouteResponse.value = ping(

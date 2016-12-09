@@ -25,7 +25,7 @@ class InterceptorOrderValidator implements Validator {
         });
       }
 
-      inter.instance.params.values
+      inter.routeWrapper.params.values
           .where((ParsedMakeParam param) => param is ParsedMakeParamType)
           .forEach((ParsedMakeParamType inst) {
         inst.inputs

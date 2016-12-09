@@ -14,6 +14,9 @@ const NamedElement kTypeInput =
 const NamedElement kTypeInterceptor =
     const NamedElementImpl.Make('Interceptor', kLibraryAnnotation);
 
+const NamedElement kTypeRouteWrapper =
+    const NamedElementImpl.Make('RouteWrapper', kLibraryAnnotation);
+
 const NamedElement kTypeExceptionHandler =
     const NamedElementImpl.Make('ExceptionHandler', kLibraryAnnotation);
 

@@ -1,14 +1,15 @@
 part of jaguar.generator.parser.route;
 
-class ParsedInterceptor {
-  /// Annotation used to instantiate interceptor
-  final AnnotationElementWrap annotation;
-
+class ParsedInterceptor extends Object with NamedElement {
   /// Holds the constant value of the interceptor annotation
-  final ParsedInterceptorInstance instance;
+  final ParsedRouteWrapper routeWrapper;
 
   /// The class of the interceptor
   final ClassElementWrap clazz;
+
+  String get name => clazz.name;
+
+  String get libraryName => clazz.libraryName;
 
   /// Pre interceptor info
   final ParsedInterceptorFuncDef pre;
@@ -18,12 +19,12 @@ class ParsedInterceptor {
 
   final Map<String, bool> interceptorResultsUsed;
 
-  ParsedInterceptor(this.annotation, this.clazz, this.instance, this.pre,
-      this.post, this.interceptorResultsUsed);
+  ParsedInterceptor(this.clazz, this.routeWrapper, this.pre, this.post,
+      this.interceptorResultsUsed);
 
   factory ParsedInterceptor.Make(AnnotationElementWrap annot) {
-    final ClassElementWrap clazz = annot.ancestorClazz;
-    final instance = new ParsedInterceptorInstance.FromElementAnnotation(annot);
+    final routeWrapper = new ParsedRouteWrapper.FromElementAnnotation(annot);
+    final ClassElementWrap clazz = routeWrapper.wrapped;
     ParsedInterceptorFuncDef pre;
     ParsedInterceptorFuncDef post;
 
@@ -51,7 +52,7 @@ class ParsedInterceptor {
     });
 
     return new ParsedInterceptor(
-        annot, clazz, instance, pre, post, interceptorResultsUsed);
+        clazz, routeWrapper, pre, post, interceptorResultsUsed);
   }
 
   /// Return type of pre step
@@ -61,38 +62,12 @@ class ParsedInterceptor {
   DartTypeWrap get returnsFutureFlattened => pre?.returnsFutureFlattened;
 
   /// Id specified for the interceptor instantiation
-  String get id => instance.id;
+  String get id => routeWrapper.id;
 
   String get resultName => 'r${clazz.name}' + (id ?? '');
 
   /// Constructor of the interceptor
   ConstructorElementWrap get constructor => clazz.unnamedConstructor;
-
-  /// Method element of createState
-  MethodElementWrap get createStateMethod => clazz.methods.where((method) {
-        return method.isStatic;
-      }).firstWhere((method) => method.name == 'createState',
-          orElse: () => null);
-
-  /// Can this interceptor create state?
-  bool get canCreateState => createStateMethod is MethodElementWrap;
-
-  ParameterElementWrap get stateParam => constructor.optionalParameters
-      .firstWhere((param) => param.name == 'state', orElse: () => null);
-
-  bool get needsState => stateParam is ParameterElementWrap && !stateProvided;
-
-  bool get stateProvided {
-    for (Expression exp in annotation.argumentAst) {
-      if (exp is NamedExpression) {
-        if (exp.name.label.name == 'state') {
-          return true;
-        }
-      }
-    }
-
-    return false;
-  }
 
   /// Does this interceptor use Query parameters
   bool get usesQueryParam {
@@ -118,7 +93,7 @@ class ParsedInterceptor {
         continue;
       }
 
-      if (!clazz.isSubtypeOf(kTypeInterceptor)) {
+      if (!clazz.isSubtypeOf(kTypeRouteWrapper)) {
         continue;
       }
 

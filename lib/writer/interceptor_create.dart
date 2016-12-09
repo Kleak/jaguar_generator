@@ -12,7 +12,7 @@ class InterceptorCreateWriter {
   String generate() {
     StringBuffer sb = new StringBuffer();
 
-    sb.write('${_i.name} ${_i.genInstanceName} = new ${_i.name}(');
+    sb.write('${_i.name} ${_i.genInstanceName} = new ${_c.name}(');
 
     for (InterceptorRequiredParam param in _c.required) {
       sb.write(param.source);
@@ -30,14 +30,11 @@ class InterceptorCreateWriter {
           sb.write('await ');
         }
         sb.write('${param.methodName}()');
-      } else if (param is InterceptorNamedParamState) {
-        sb.write('${_i.name}.createState()');
       }
       sb.write(',');
     }
 
-    sb.write(')');
-    sb.writeln(";");
+    sb.writeln(').createInterceptor();');
 
     return sb.toString();
   }
