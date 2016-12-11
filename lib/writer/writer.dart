@@ -90,9 +90,9 @@ class Writer {
     }
 
     _u.groups.forEach((Group group) {
-      sb.write("if (await ${group.name}.handleRequest(request");
+      sb.write("if (await ${group.name}.handleRequest(request,prefix: prefix");
       if (group.path.isNotEmpty) {
-        sb.write(",prefix: prefix + '${group.path}'");
+        sb.write(" + '${group.path}'");
       }
       sb.write(")) {");
       sb.writeln("return true;");

@@ -3,7 +3,6 @@ part of jaguar.generator.parser.route;
 abstract class ParsedMakeParam {
   static ParsedMakeParam detect(DartObject object) {
     DartType objType = object.type;
-    print(objType);
     DartTypeWrap makeParam = new DartTypeWrap(objType);
 
     if (makeParam.compareNamedElement(kTypeMakeParamFromType)) {

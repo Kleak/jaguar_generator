@@ -71,7 +71,9 @@ class ParsedRoute extends Object with ChainFunction {
   }
 
   bool isInterceptorResultUsed(ParsedInterceptor inter) =>
-      _interceptorResultUsed.containsKey(inter.resultName);
+      _interceptorResultUsed.containsKey(inter.resultName) ||
+      upper.interceptors.any((intercep) =>
+          intercep.interceptorResultsUsed.containsKey(inter.resultName));
 
   /// Finds route annotation on the given method
   static ParsedRoute detectRoute(ParsedUpper upper, MethodElementWrap element) {

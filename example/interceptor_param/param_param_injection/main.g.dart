@@ -31,7 +31,9 @@ abstract class _$JaguarExampleApi implements RequestHandler {
       User rUserProvider = iUserProvider.pre();
       WithParam iWithParam = new WrapWithParam(
         makeParams: const {#param: const MakeParamFromType(ParamUsesInjection)},
-      ).createInterceptor();
+        param: new ParamUsesInjection(rUserProvider),
+      )
+          .createInterceptor();
       iWithParam.pre();
       rRouteResponse.statusCode = 200;
       rRouteResponse.value = ping(
