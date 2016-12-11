@@ -1,0 +1,7 @@
+apis:
+- example/interceptor_param/param_param_injection/main.dart
+- example/routes/simple/simple.dart
+# - test/negative/interceptor/no_pre_post/no_pre_post.dart
+#- test/negative/route/more_inputs_than_params/more_inputs_than_params.dart
+#- test/negative/interceptor/more_inputs_than_params/more_inputs_than_params.dart
+- test/negative/route/wrong_input_interceptor_type/wrong_input_interceptor_type.dart

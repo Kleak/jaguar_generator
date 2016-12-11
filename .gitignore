@@ -7,3 +7,4 @@ pubspec.lock
 jaguar_generator.iml
 
 .idea
+.dart_tool
