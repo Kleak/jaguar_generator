@@ -33,7 +33,7 @@ class ApiGenerator extends GeneratorForAnnotation<ant.Api> {
         "Generating for api class ${clazz.name} in ${buildStep.input.id} ...");
 
     // Parse source code
-    ParsedUpper parsed = new ParsedUpper(clazz, api.path)..parse();
+    ParsedUpper parsed = new ParsedUpper(clazz, api.url)..parse();
 
     //Validate
     new ValidatorUpper(parsed)..validate();
