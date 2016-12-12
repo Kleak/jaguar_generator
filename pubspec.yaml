@@ -11,10 +11,9 @@ dependencies:
   build: ">=0.4.1 <0.5.0"
   yaml: ">=2.1.10 <3.0.0"
   jaguar: ">=0.1.0 <0.2.0"
-#    path: ../jaguar
-#    git: https://github.com/Jaguar-dart/jaguar.git
+    # path: ../jaguar
+    # git: https://github.com/Jaguar-dart/jaguar.git
   source_gen_help:
-    # path: ../source_gen_help
     git:
       url: https://github.com/Jaguar-dart/source_gen_help.git
       ref: ba577f4
