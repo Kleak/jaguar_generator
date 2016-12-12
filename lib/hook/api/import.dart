@@ -13,7 +13,7 @@ import 'package:source_gen_help/import.dart';
 import 'package:jaguar_generator/parser/parser.dart';
 import 'package:jaguar_generator/validator/validator.dart';
 import 'package:jaguar_generator/models/models.dart';
-import 'package:jaguar_generator/toModel/toModel.dart';
+import 'package:jaguar_generator/to_model/to_model.dart';
 import 'package:jaguar_generator/writer/writer.dart';
 
 class ApiGenerator extends GeneratorForAnnotation<ant.Api> {
