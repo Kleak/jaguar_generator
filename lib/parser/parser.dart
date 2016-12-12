@@ -5,7 +5,7 @@ import 'package:analyzer/dart/element/type.dart';
 import 'package:analyzer/dart/constant/value.dart';
 
 import 'package:jaguar/src/annotations/import.dart' as ant;
-import 'package:source_gen_help/import.dart';
+import 'package:source_gen_help/source_gen_help.dart';
 
 import 'package:jaguar_generator/common/constants.dart';
 

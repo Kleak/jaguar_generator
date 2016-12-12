@@ -1,6 +1,6 @@
 library jaguar_generator.validator;
 
-import 'package:source_gen_help/import.dart';
+import 'package:source_gen_help/source_gen_help.dart';
 import 'package:jaguar_generator/parser/parser.dart';
 import 'package:jaguar_generator/common/validator.dart';
 

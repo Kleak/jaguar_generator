@@ -1,6 +1,6 @@
 library jaguar_generator.models;
 
-import 'package:source_gen_help/import.dart';
+import 'package:source_gen_help/source_gen_help.dart';
 
 import 'package:jaguar/src/annotations/import.dart' as ant;
 
