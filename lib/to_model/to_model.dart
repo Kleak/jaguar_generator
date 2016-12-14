@@ -3,7 +3,6 @@ library jaguar_generator.toModels;
 import 'package:jaguar_generator/parser/parser.dart';
 import 'package:jaguar_generator/models/models.dart';
 import 'package:source_gen_help/source_gen_help.dart';
-import 'package:jaguar_generator/common/constants.dart';
 
 class ToModelUpper {
   ParsedUpper upper;
@@ -48,8 +47,12 @@ class ToModelUpper {
         method.name = route.method.name;
         method.returnType = route.method.returnTypeWithoutFuture.displayName;
         method.returnsVoid = route.method.returnType.isVoid;
-        method.returnsResponse = route.method.returnTypeWithoutFuture
-            .compareNamedElement(kJaguarResponse);
+        method.returnsResponse = route.returnsResponse;
+        if (!route.jaguarResponseType.isVoid) {
+          method.jaguarResponseType = route.jaguarResponseType.name;
+        } else {
+          method.jaguarResponseType = 'dynamic';
+        }
         method.isAsync = route.method.returnType.isAsync;
 
         List<Input> inputs = _makeInputs(route.inputs);
@@ -92,6 +95,27 @@ class ToModelUpper {
         upper.exceptions.map(func).forEach(handlers.add);
         route.exceptions.map(func).forEach(handlers.add);
         newRoute.exceptions = handlers;
+      }
+
+      {
+        int respIndex = 0;
+        for (Interceptor inter in newRoute.interceptors.reversed) {
+          if (inter.post == null) {
+            continue;
+          }
+
+          for (Input inp in inter.post.inputs) {
+            if (inp is InputRouteResponse) {
+              inp.respIndex = respIndex;
+            }
+          }
+
+          if (inter.post.returnsResponse) {
+            respIndex++;
+            inter.post.respIndex = respIndex;
+          }
+        }
+        newRoute.respIndex = respIndex;
       }
 
       usesQueryParam = usesQueryParam || route.usesQueryParam;
@@ -171,6 +195,9 @@ class ToModelUpper {
       post.returnsResponse = interceptor.post.returnsResponse;
       post.isAsync = interceptor.post.returnType.isAsync;
       post.inputs = _makeInputs(interceptor.post.inputs);
+      if (interceptor.post.returnsResponse) {
+        post.jaguarResponseType = interceptor.post.jaguarResponseType.name;
+      }
       newInterceptor.post = post;
     }
 

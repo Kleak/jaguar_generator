@@ -60,7 +60,9 @@ class InputQueryParams implements Input {
 }
 
 class InputRouteResponse implements Input {
-  const InputRouteResponse();
+  int respIndex = 0;
 
-  String get writeVal => 'rRouteResponse';
+  InputRouteResponse([this.respIndex = 0]);
+
+  String get writeVal => 'rRouteResponse${respIndex}';
 }

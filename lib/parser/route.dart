@@ -94,4 +94,15 @@ class ParsedRoute extends Object with ChainFunction {
 
     return new ParsedRoute(upper, element, annots.first);
   }
+
+  bool get returnsResponse =>
+      method.returnTypeWithoutFuture.compareNamedElement(kJaguarResponse);
+
+  DartTypeWrap get jaguarResponseType {
+    if (!returnsResponse) {
+      return method.returnTypeWithoutFuture;
+    }
+
+    return method.returnTypeWithoutFuture.typeArguments.first;
+  }
 }

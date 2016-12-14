@@ -21,17 +21,17 @@ class RouteCallWriter extends Object with GenInputs {
     if (!route.isWebsocket) {
       if (!_m.returnsVoid) {
         if (_m.returnsResponse) {
-          sb.write("rRouteResponse = ");
+          sb.write("rRouteResponse0 = ");
         } else {
           if (_v.statusCode is int) {
-            sb.writeln("rRouteResponse.statusCode = ${_v.statusCode};");
+            sb.writeln("rRouteResponse0.statusCode = ${_v.statusCode};");
           }
           if (_v.headers is Map<String, String>) {
             _v.headers.forEach((String key, String value) {
-              sb.writeln("rRouteResponse.headers['$key'] = '$value';");
+              sb.writeln("rRouteResponse0.headers['$key'] = '$value';");
             });
           }
-          sb.write("rRouteResponse.value = ");
+          sb.write("rRouteResponse0.value = ");
         }
       }
     }

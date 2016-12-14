@@ -25,9 +25,13 @@ class InterceptorPre {
 }
 
 class InterceptorPost {
+  int respIndex = 0;
+
   bool needsHttpRequest;
 
   bool returnsResponse;
+
+  String jaguarResponseType;
 
   bool isAsync;
 
