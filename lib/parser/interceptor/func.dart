@@ -21,6 +21,14 @@ class ParsedInterceptorFuncDef extends Object
   bool get returnsResponse =>
       returnsFutureFlattened.compareNamedElement(kJaguarResponse);
 
+  DartTypeWrap get jaguarResponseType {
+    if (!returnsResponse) {
+      throw new Exception("Bug! Please report it to Jaguar developers!");
+    }
+
+    return returnsFutureFlattened.typeArguments.first;
+  }
+
   /// Default constructor. Constructs [InterceptorFuncDef] from the given
   /// method element
   ParsedInterceptorFuncDef(this.method, this.inputs);

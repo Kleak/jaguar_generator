@@ -114,7 +114,8 @@ class Writer {
     sb.writeln("if (match) {");
 
     if (!route.isWebsocket) {
-      sb.writeln("Response rRouteResponse = new Response(null);");
+      sb.writeln(
+          "Response<${route.method.jaguarResponseType}> rRouteResponse0 = new Response(null);");
     }
 
     if (route.exceptions.length != 0) {
@@ -146,7 +147,8 @@ class Writer {
     }
 
     if (!route.isWebsocket) {
-      sb.writeln('await rRouteResponse.writeResponse(request.response);');
+      sb.writeln(
+          'await rRouteResponse${route.respIndex}.writeResponse(request.response);');
     }
 
     sb.writeln("return true;");

@@ -49,6 +49,8 @@ class RouteMethod {
 
   bool returnsResponse;
 
+  String jaguarResponseType;
+
   bool isAsync;
 
   List<Input> inputs;
@@ -74,6 +76,8 @@ class Route {
   RouteMethod method;
 
   List<ExceptionHandler> exceptions = <ExceptionHandler>[];
+
+  int respIndex;
 }
 
 class Group {

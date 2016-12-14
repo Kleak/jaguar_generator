@@ -19,7 +19,8 @@ class InterceptorPostWriter extends Object with GenInputs {
     StringBuffer sb = new StringBuffer();
 
     if (_p.returnsResponse) {
-      sb.write("rRouteResponse = ");
+      sb.write(
+          "Response<${_p.jaguarResponseType}> rRouteResponse${_p.respIndex} = ");
     }
 
     if (_p.isAsync) {
