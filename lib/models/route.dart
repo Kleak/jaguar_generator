@@ -33,7 +33,12 @@ class QueryParam {
     String ret = "$key: $modifierFunc(queryParams.getField('$key'))";
 
     if (defaultVal != null) {
-      ret += '??$defaultVal';
+      ret += '??';
+      if (defaultVal is String) {
+        ret += "'$defaultVal'";
+      } else {
+        ret += "$defaultVal";
+      }
     }
 
     return ret;
