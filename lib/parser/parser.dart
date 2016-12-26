@@ -114,7 +114,7 @@ class InputInterceptorException {
       sb.writeln('Input: $input');
     }
     if (param is String) {
-      sb.writeln('Input: $param');
+      sb.writeln('Param: $param');
     }
 
     return sb.toString();
