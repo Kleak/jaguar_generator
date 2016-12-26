@@ -29,10 +29,13 @@ class PathParamsValidator implements Validator {
           '', 0, 'FromPathParam must have one required argument!');
     }
 
-    if (!con.requiredParameters.first.type
-        .isSubTypeOfNamedElement(NamedElement.kTypeMap)) {
-      throw new GeneratorException(
-          '', 0, "FromPathParam's required argument must be derived from Map!");
+    {
+      DartTypeWrap type = con.requiredParameters.first.type;
+      if (!type.compareNamedElement(NamedElement.kTypeMap) &&
+          !type.isSubTypeOfNamedElement(NamedElement.kTypeMap)) {
+        throw new GeneratorException('', 0,
+            "FromPathParam's required argument must be derived from Map!");
+      }
     }
   }
 }
