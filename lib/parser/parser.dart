@@ -85,3 +85,38 @@ class GeneratorException {
 
   String toString() => message;
 }
+
+class InputInterceptorException {
+  final String message;
+
+  String upper;
+
+  String route;
+
+  String interceptor;
+
+  String input;
+
+  String param;
+
+  InputInterceptorException(this.message);
+
+  String toString() {
+    StringBuffer sb = new StringBuffer();
+
+    sb.writeln('Message: $message');
+    sb.writeln('RequestHandler: $upper');
+    sb.writeln('Route: $route');
+    if (interceptor is String) {
+      sb.writeln('Interceptor: $interceptor');
+    }
+    if (input is String) {
+      sb.writeln('Input: $input');
+    }
+    if (param is String) {
+      sb.writeln('Input: $param');
+    }
+
+    return sb.toString();
+  }
+}
