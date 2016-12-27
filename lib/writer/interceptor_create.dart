@@ -12,7 +12,7 @@ class InterceptorCreateWriter {
   String generate() {
     StringBuffer sb = new StringBuffer();
 
-    sb.write('${_i.name} ${_i.genInstanceName} = new ${_c.name}(');
+    sb.write('${_i.genInstanceName} = new ${_c.name}(');
 
     for (InterceptorRequiredParam param in _c.required) {
       sb.write(param.source);

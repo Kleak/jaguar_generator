@@ -123,6 +123,12 @@ class Writer {
     }
 
     for (Interceptor interceptor in route.interceptors) {
+      sb.writeln('${interceptor.name} ${interceptor.genInstanceName};');
+    }
+
+    sb.writeln("try {");
+
+    for (Interceptor interceptor in route.interceptors) {
       InterceptorPreWriter writer =
           new InterceptorPreWriter(route, interceptor);
       sb.write(writer.generate());
@@ -139,16 +145,23 @@ class Writer {
       sb.write(writer.generate());
     }
 
+    if (!route.isWebsocket) {
+      sb.writeln(
+          'await rRouteResponse${route.respIndex}.writeResponse(request.response);');
+    }
+
+    sb.writeln('} catch(e) {');
+    for (Interceptor interceptor in route.interceptors.reversed) {
+      sb.writeln('await ${interceptor.genInstanceName}.onException();');
+    }
+    sb.writeln('rethrow;');
+    sb.writeln('}');
+
     if (route.exceptions.length != 0) {
       sb.write('} ');
 
       RouteExceptionWriter exceptWriter = new RouteExceptionWriter(route);
       sb.write(exceptWriter.generate());
-    }
-
-    if (!route.isWebsocket) {
-      sb.writeln(
-          'await rRouteResponse${route.respIndex}.writeResponse(request.response);');
     }
 
     sb.writeln("return true;");

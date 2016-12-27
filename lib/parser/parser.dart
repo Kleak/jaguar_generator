@@ -8,6 +8,7 @@ import 'package:jaguar/src/annotations/import.dart' as ant;
 import 'package:source_gen_help/source_gen_help.dart';
 
 import 'package:jaguar_generator/common/constants.dart';
+import 'package:jaguar_generator/common/exceptions/exceptions.dart';
 
 part 'exception.dart';
 part 'group.dart';
@@ -51,7 +52,15 @@ class ParsedUpper {
 
   void _collectRoutes() {
     for (MethodElementWrap method in upper.methods) {
-      ParsedRoute route = ParsedRoute.detectRoute(this, method);
+      ParsedRoute route;
+
+      try {
+        route = new _ParsedRouteBuilder(this, method).route;
+      } on ExceptionOnRoute catch (e) {
+        e.route = method.name;
+        e.upper = upper.name;
+        rethrow;
+      }
 
       if (route == null) {
         continue;
