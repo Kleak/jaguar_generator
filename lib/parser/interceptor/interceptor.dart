@@ -31,9 +31,9 @@ class ParsedInterceptor extends Object with NamedElement {
     /// Find pre and post interceptors in class
     clazz.methods.forEach((MethodElementWrap method) {
       if (method.name == 'pre') {
-        pre = new ParsedInterceptorFuncDef.Make(method);
+        pre = new ParsedInterceptorFuncDefBuilder(method).func;
       } else if (method.name == 'post') {
-        post = new ParsedInterceptorFuncDef.Make(method);
+        post = new ParsedInterceptorFuncDefBuilder(method).func;
       }
     });
 

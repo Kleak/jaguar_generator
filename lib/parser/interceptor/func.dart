@@ -33,19 +33,71 @@ class ParsedInterceptorFuncDef extends Object
   /// method element
   ParsedInterceptorFuncDef(this.method, this.inputs);
 
-  factory ParsedInterceptorFuncDef.Make(MethodElementWrap method) {
-    List<ParsedInput> inputs = ParsedInput.detectInputs(method,
-        method.parameters, getNumDefaultInputs(_needsHttpRequest(method)));
-
-    return new ParsedInterceptorFuncDef(method, inputs);
-  }
-
   bool get canHaveQueryParams => false;
 
   static int getNumDefaultInputs(bool httpReq) => httpReq ? 1 : 0;
 
   @override
   int get numDefaultInputs => getNumDefaultInputs(needsHttpRequest);
+}
+
+class ParsedInterceptorFuncDefBuilder {
+  final MethodElementWrap method;
+
+  ParsedInterceptorFuncDef _func;
+
+  ParsedInterceptorFuncDef get func => _func;
+
+  ParsedInterceptorFuncDefBuilder(this.method) {
+    final List<ParsedInput> inputs = _detectInputs();
+
+    _func = new ParsedInterceptorFuncDef(method, inputs);
+  }
+
+  int get numDefaultInputs =>
+      ParsedInterceptorFuncDef.getNumDefaultInputs(_needsHttpRequest(method));
+
+  //Detects inputs
+  List<ParsedInput> _detectInputs() {
+    final List<ParsedInput> inputs =
+        ParsedInput.detectInputs(method, method.parameters, numDefaultInputs);
+
+    final int numMethodInps = numDefaultInputs + inputs.length;
+    bool hasFinished = false;
+
+    //Detect inputs on parameters
+    for (int idx = numDefaultInputs;
+        idx < method.requiredParameters.length;
+        idx++) {
+      final ParameterElementWrap param = method.requiredParameters[idx];
+
+      ParsedInput input = ParsedInput.detectOnParam(param);
+
+      if (idx < numMethodInps) {
+        if (input is ParsedInput) {
+          final except = new InputException(
+              'Input for this method is already specified on method!');
+          except.param = param.name;
+          throw except;
+        }
+        continue;
+      }
+
+      if (input is ParsedInput) {
+        if (hasFinished) {
+          final except = new InputException(
+              'Inputs must be specified in consecutive params!');
+          except.param = param.name;
+          throw except;
+        }
+        inputs.add(input);
+      } else {
+        hasFinished = true;
+      }
+    }
+
+    return inputs;
+  }
 }
 
 abstract class ChainFunction {

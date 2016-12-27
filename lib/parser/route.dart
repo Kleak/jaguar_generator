@@ -1,11 +1,5 @@
 part of jaguar.generator.parser.route;
 
-/* TODO
-class ParsedRoute extends Object with ChainFunction {
-  Map<String, bool> _interceptorResultUsed = {};
-}
-*/
-
 class ParsedRoute extends Object with ChainFunction {
   final ParsedUpper upper;
 
@@ -119,12 +113,8 @@ class _ParsedRouteBuilder {
 
   //Detects inputs
   List<ParsedInput> _detectInputs() {
-    final List<ParsedInput> inputs = [];
-
-    //Detect inputs on method
-    ParsedInput
-        .detectInputs(method, method.parameters, numDefaultInputs)
-        .forEach(inputs.add);
+    final List<ParsedInput> inputs =
+        ParsedInput.detectInputs(method, method.parameters, numDefaultInputs);
 
     final int numMethodInps = numDefaultInputs + inputs.length;
     bool hasFinished = false;
