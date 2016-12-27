@@ -24,6 +24,33 @@ class ParsedInput {
 
     return inputs;
   }
+
+  static ParsedInput detectOnParam(ParameterElementWrap param) {
+    List<ParsedInput> inputs = [];
+    for (int annotIdx = 0; annotIdx < param.metadata.length; annotIdx++) {
+      final AnnotationElementWrap annot = param.metadata[annotIdx];
+
+      if (!isAnnotationInput(annot)) {
+        continue;
+      }
+
+      ParsedInput inp = createInput(annot, param);
+      inputs.add(inp);
+    }
+
+    if (inputs.length == 0) {
+      return null;
+    }
+
+    if (inputs.length > 1) {
+      final except =
+          new InputException('Only one input annotation allowed on parameter!');
+      except.param = param.name;
+      throw except;
+    }
+
+    return inputs.first;
+  }
 }
 
 class ParsedInputHeader implements ParsedInput {

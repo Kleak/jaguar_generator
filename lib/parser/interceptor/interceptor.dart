@@ -17,10 +17,10 @@ class ParsedInterceptor extends Object with NamedElement {
   /// Post interceptor info
   final ParsedInterceptorFuncDef post;
 
-  final Map<String, bool> interceptorResultsUsed;
+  final Map<String, bool> interceptorResultUsed;
 
   ParsedInterceptor(this.clazz, this.routeWrapper, this.pre, this.post,
-      this.interceptorResultsUsed);
+      this.interceptorResultUsed);
 
   factory ParsedInterceptor.Make(AnnotationElementWrap annot) {
     final routeWrapper = new ParsedRouteWrapper.FromElementAnnotation(annot);
@@ -81,6 +81,9 @@ class ParsedInterceptor extends Object with NamedElement {
 
     return false;
   }
+
+  bool isInterceptorResultUsed(ParsedInterceptor inter) =>
+      interceptorResultUsed.containsKey(inter.resultName);
 
   /// Detects interceptors on a given method or class
   static List<ParsedInterceptor> detectInterceptors(WithMetadata element) {

@@ -1,5 +1,11 @@
 part of jaguar.generator.parser.route;
 
+/* TODO
+class ParsedRoute extends Object with ChainFunction {
+  Map<String, bool> _interceptorResultUsed = {};
+}
+*/
+
 class ParsedRoute extends Object with ChainFunction {
   final ParsedUpper upper;
 
@@ -7,93 +13,21 @@ class ParsedRoute extends Object with ChainFunction {
 
   final AnnotationElementWrap routeAnnot;
 
-  ant.RouteBase item;
+  final List<ParsedInput> inputs;
 
-  final List<ParsedInput> inputs = <ParsedInput>[];
+  final List<ParsedInterceptor> interceptors;
 
-  final List<ParsedInterceptor> interceptors = <ParsedInterceptor>[];
+  final List<ParsedExceptionHandler> exceptions;
 
-  Map<String, bool> _interceptorResultUsed = {};
+  final Map<String, bool> _interceptorResultUsed;
 
-  final List<ParsedExceptionHandler> exceptions = <ParsedExceptionHandler>[];
-
-  ParsedRoute(this.upper, this.method, this.routeAnnot) {
-    item = routeAnnot.instantiated;
-
-    _detectInputs();
-
-    ParsedInterceptor.detectInterceptors(method).forEach((inter) {
-      interceptors.add(inter);
-      _interceptorResultUsed.addAll(inter.interceptorResultsUsed);
-    });
-
-    ParsedExceptionHandler.detectAllExceptions(method).forEach(exceptions.add);
-  }
-
-  //Detects inputs
-  void _detectInputs() {
-    inputs.addAll(
-        ParsedInput.detectInputs(method, method.parameters, numDefaultInputs));
-
-    inputs.forEach((inp) {
-      if (inp is ParsedInputInterceptor) {
-        _interceptorResultUsed[inp.genName] = true;
-      }
-    });
-  }
-
-  bool get canHaveQueryParams => true;
+  ant.RouteBase get item => routeAnnot.instantiated;
 
   String get instantiationString => routeAnnot.instantiationString;
 
   String get prototype => method.prototype;
 
   bool get isWebSocket => item is ant.Ws;
-
-  @override
-  int get numDefaultInputs =>
-      (needsHttpRequest ? 1 : 0) + (isWebSocket ? 1 : 0);
-
-  bool get usesQueryParam {
-    if (inputs.any((ParsedInput inp) => inp is ParsedInputQueryParams)) {
-      return true;
-    }
-
-    if (!areOptionalParamsPositional && optionalParams.length != 0) {
-      return true;
-    }
-
-    if (interceptors.any((ParsedInterceptor info) => info.usesQueryParam)) {
-      return true;
-    }
-
-    return false;
-  }
-
-  bool isInterceptorResultUsed(ParsedInterceptor inter) =>
-      _interceptorResultUsed.containsKey(inter.resultName) ||
-      upper.interceptors.any((intercep) =>
-          intercep.interceptorResultsUsed.containsKey(inter.resultName));
-
-  /// Finds route annotation on the given method
-  static ParsedRoute detectRoute(ParsedUpper upper, MethodElementWrap element) {
-    List<AnnotationElementWrap> annots = element.metadata
-        .where((annot) => annot.instantiated is ant.RouteBase)
-        .toList();
-
-    if (annots.length == 0) {
-      return null;
-    }
-
-    if (annots.length != 1) {
-      StringBuffer sb = new StringBuffer();
-
-      sb.write('${element.name} has more than one Route annotations.');
-      throw new GeneratorException('', 0, sb.toString());
-    }
-
-    return new ParsedRoute(upper, element, annots.first);
-  }
 
   bool get returnsResponse =>
       method.returnTypeWithoutFuture.compareNamedElement(kJaguarResponse);
@@ -104,5 +38,134 @@ class ParsedRoute extends Object with ChainFunction {
     }
 
     return method.returnTypeWithoutFuture.typeArguments.first;
+  }
+
+  bool get canHaveQueryParams => true;
+
+  @override
+  int get numDefaultInputs =>
+      getNumDefaultInputs(needsHttpRequest, isWebSocket);
+
+  bool get usesQueryParam {
+    if (super.usesQueryParam) return true;
+
+    if (interceptors.any((info) => info.usesQueryParam)) return true;
+
+    return false;
+  }
+
+  ParsedRoute(this.upper, this.method, this.routeAnnot, this.inputs,
+      this.interceptors, this.exceptions, this._interceptorResultUsed);
+
+  bool isInterceptorResultUsed(ParsedInterceptor inter) =>
+      _interceptorResultUsed.containsKey(inter.resultName) ||
+      upper.interceptors
+          .any((intercep) => intercep.isInterceptorResultUsed(inter));
+
+  static int getNumDefaultInputs(bool httpReq, bool isWebSocket) =>
+      (httpReq ? 1 : 0) + (isWebSocket ? 1 : 0);
+}
+
+class _ParsedRouteBuilder {
+  final ParsedUpper upper;
+
+  final MethodElementWrap method;
+
+  ParsedRoute _route;
+
+  ParsedRoute get route => _route;
+
+  final Map<String, bool> _interceptorResultUsed = {};
+
+  dynamic _instantiated;
+
+  int get numDefaultInputs => ParsedRoute.getNumDefaultInputs(
+      _needsHttpRequest(method), _instantiated is ant.Ws);
+
+  _ParsedRouteBuilder(this.upper, this.method) {
+    List<AnnotationElementWrap> annots = method.metadata
+        .where((annot) => annot.instantiated is ant.RouteBase)
+        .toList();
+
+    if (annots.length == 0) {
+      return;
+    }
+
+    if (annots.length != 1) {
+      final except = new RouteException(
+          'Route method has more than one route annotations!');
+      except.upper = upper.name;
+      except.route = method.name;
+      throw except;
+    }
+
+    _instantiated = annots.first.instantiated;
+
+    final List<ParsedInput> inputs = [];
+    inputs.addAll(_detectInputs());
+
+    final List<ParsedInterceptor> interceptors = [];
+    ParsedInterceptor.detectInterceptors(method).forEach((inter) {
+      interceptors.add(inter);
+      _interceptorResultUsed.addAll(inter.interceptorResultUsed);
+    });
+
+    final List<ParsedExceptionHandler> exceptions = [];
+    ParsedExceptionHandler.detectAllExceptions(method).forEach(exceptions.add);
+
+    _route = new ParsedRoute(upper, method, annots.first, inputs, interceptors,
+        exceptions, _interceptorResultUsed);
+  }
+
+  //Detects inputs
+  List<ParsedInput> _detectInputs() {
+    final List<ParsedInput> inputs = [];
+
+    //Detect inputs on method
+    ParsedInput
+        .detectInputs(method, method.parameters, numDefaultInputs)
+        .forEach(inputs.add);
+
+    final int numMethodInps = numDefaultInputs + inputs.length;
+    bool hasFinished = false;
+
+    //Detect inputs on parameters
+    for (int idx = numDefaultInputs;
+        idx < method.requiredParameters.length;
+        idx++) {
+      final ParameterElementWrap param = method.requiredParameters[idx];
+
+      ParsedInput input = ParsedInput.detectOnParam(param);
+
+      if (idx < numMethodInps) {
+        if (input is ParsedInput) {
+          final except = new InputException(
+              'Input for this method is already specified on method!');
+          except.param = param.name;
+          throw except;
+        }
+        continue;
+      }
+
+      if (input is ParsedInput) {
+        if (hasFinished) {
+          final except = new InputException(
+              'Inputs must be specified in consecutive params!');
+          except.param = param.name;
+          throw except;
+        }
+        inputs.add(input);
+      } else {
+        hasFinished = true;
+      }
+    }
+
+    inputs.forEach((inp) {
+      if (inp is ParsedInputInterceptor) {
+        _interceptorResultUsed[inp.genName] = true;
+      }
+    });
+
+    return inputs;
   }
 }
