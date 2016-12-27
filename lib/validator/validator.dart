@@ -36,7 +36,13 @@ class ValidatorUpper implements Validator {
       //Check route inputs
       {
         for (int inpIdx = 0; inpIdx < route.inputs.length; inpIdx++) {
-          new InputTypeChecker(route, inpIdx, interceptors)..validate();
+          try {
+            new InputTypeChecker(route, inpIdx, interceptors)..validate();
+          } on InputInterceptorException catch (e) {
+            e.upper = upper.name;
+            e.route = route.method.name;
+            rethrow;
+          }
         }
       }
 

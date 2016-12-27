@@ -29,10 +29,13 @@ class PathParamsValidator implements Validator {
           '', 0, 'FromPathParam must have one required argument!');
     }
 
-    if (!con.requiredParameters.first.type
-        .isSubTypeOfNamedElement(NamedElement.kTypeMap)) {
-      throw new GeneratorException(
-          '', 0, "FromPathParam's required argument must be derived from Map!");
+    {
+      DartTypeWrap type = con.requiredParameters.first.type;
+      if (!type.compareNamedElement(NamedElement.kTypeMap) &&
+          !type.isSubTypeOfNamedElement(NamedElement.kTypeMap)) {
+        throw new GeneratorException('', 0,
+            "FromPathParam's required argument must be derived from Map!");
+      }
     }
   }
 }
@@ -92,23 +95,38 @@ class InputInterceptorTypeChecker implements Validator {
     }, orElse: () => null);
 
     if (inter == null) {
-      throw new GeneratorException(
-          '', 0, 'Interceptor not found for input ${input.genName}!');
+      final except =
+          new InputInterceptorException('Interceptor not found for input!');
+      except.input = input.resultFrom.name;
+      except.param = param.name;
+      throw except;
     }
 
     if (inter.pre == null) {
-      throw new GeneratorException('', 0,
+      final except = new InputInterceptorException(
           "An interceptor that doesn't have pre has been used as input!");
+      except.interceptor = inter.name;
+      except.input = input.resultFrom.name;
+      except.param = param.name;
+      throw except;
     }
 
     if (inter.returnsFutureFlattened.isVoid) {
-      throw new GeneratorException(
-          '', 0, "An interceptor that returns void has been used as input!");
+      final except = new InputInterceptorException(
+          "An interceptor that returns void has been used as input!");
+      except.interceptor = inter.name;
+      except.input = input.resultFrom.name;
+      except.param = param.name;
+      throw except;
     }
 
     if (!inter.returnsFutureFlattened.isAssignableTo(param.type)) {
-      throw new GeneratorException('', 0,
+      final except = new InputInterceptorException(
           "Interceptor's result type does not match input's param type!");
+      except.interceptor = inter.name;
+      except.input = input.resultFrom.name;
+      except.param = param.name;
+      throw except;
     }
   }
 }
