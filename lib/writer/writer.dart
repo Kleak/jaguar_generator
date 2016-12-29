@@ -152,7 +152,7 @@ class Writer {
 
     sb.writeln('} catch(e) {');
     for (Interceptor interceptor in route.interceptors.reversed) {
-      sb.writeln('await ${interceptor.genInstanceName}.onException();');
+      sb.writeln('await ${interceptor.genInstanceName}?.onException();');
     }
     sb.writeln('rethrow;');
     sb.writeln('}');
