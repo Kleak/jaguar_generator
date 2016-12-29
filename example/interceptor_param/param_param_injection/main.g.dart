@@ -23,23 +23,37 @@ abstract class _$JaguarExampleApi implements RequestHandler {
     match =
         routes[0].match(request.uri.path, request.method, prefix, pathParams);
     if (match) {
-      Response rRouteResponse = new Response(null);
-      UserProvider iUserProvider = new WrapUserProvider(
-        model: user,
-      )
-          .createInterceptor();
-      User rUserProvider = iUserProvider.pre();
-      WithParam iWithParam = new WrapWithParam(
-        makeParams: const {#param: const MakeParamFromType(ParamUsesInjection)},
-        param: new ParamUsesInjection(rUserProvider),
-      )
-          .createInterceptor();
-      iWithParam.pre();
-      rRouteResponse.statusCode = 200;
-      rRouteResponse.value = ping(
-        rUserProvider,
-      );
-      await rRouteResponse.writeResponse(request.response);
+      Response<String> rRouteResponse0 = new Response(null);
+      UserProvider iUserProvider;
+      WithParam iWithParam;
+      try {
+        iUserProvider = new WrapUserProvider(
+          model: user,
+        )
+            .createInterceptor();
+        User rUserProvider = iUserProvider.pre();
+        iWithParam = new WrapWithParam(
+          makeParams: const {
+            #param: const MakeParamFromType(ParamUsesInjection),
+            #setting: const MakeParamFromSettings('host',
+                defaultValue: 'novalue', filter: SettingsFilter.Yaml)
+          },
+          param: new ParamUsesInjection(rUserProvider),
+          setting: Settings.getString("host",
+              defaultValue: "novalue", settingsFilter: SettingsFilter.Yaml),
+        )
+            .createInterceptor();
+        iWithParam.pre();
+        rRouteResponse0.statusCode = 200;
+        rRouteResponse0.value = ping(
+          rUserProvider,
+        );
+        await rRouteResponse0.writeResponse(request.response);
+      } catch (e) {
+        await iWithParam?.onException();
+        await iUserProvider?.onException();
+        rethrow;
+      }
       return true;
     }
 

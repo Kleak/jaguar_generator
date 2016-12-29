@@ -169,6 +169,13 @@ class ToModelUpper {
 
           opt.add(new InterceptorNamedMakeParamMethod(
               key, instantiated.methodName, meth.returnType.isAsync));
+        } else if (instantiated is ParsedMakeParamFromSettings) {
+          final val = new InterceptorNamedMakeParamSettings(
+              key,
+              instantiated.settingKey,
+              instantiated.defaultValue,
+              instantiated.filterStr);
+          opt.add(val);
         }
       }
 

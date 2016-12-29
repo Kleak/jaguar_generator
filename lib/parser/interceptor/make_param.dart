@@ -12,6 +12,12 @@ abstract class ParsedMakeParam {
     } else if (makeParam.compareNamedElement(kTypeMakeParamFromMethod)) {
       String method = object.getField('methodName').toSymbolValue();
       return new ParsedMakeParamFromMethod(method);
+    } else if (makeParam.compareNamedElement(kTypeMakeParamFromSettings)) {
+      String key = object.getField('key').toStringValue();
+      String defaultValue = object.getField('defaultValue').toStringValue();
+      String filter =
+          object.getField('filter')?.getField('name')?.toStringValue();
+      return new ParsedMakeParamFromSettings(key, defaultValue, filter);
     } else {
       throw new GeneratorException('', 0, 'Invalid makeParam entry!');
     }
@@ -43,4 +49,15 @@ class ParsedMakeParamFromMethod implements ParsedMakeParam {
   final String methodName;
 
   ParsedMakeParamFromMethod(this.methodName);
+}
+
+class ParsedMakeParamFromSettings implements ParsedMakeParam {
+  final String settingKey;
+
+  final String defaultValue;
+
+  final String filterStr;
+
+  ParsedMakeParamFromSettings(
+      this.settingKey, this.defaultValue, this.filterStr);
 }

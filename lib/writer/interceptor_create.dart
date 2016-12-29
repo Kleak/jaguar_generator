@@ -30,6 +30,16 @@ class InterceptorCreateWriter {
           sb.write('await ');
         }
         sb.write('${param.methodName}()');
+      } else if (param is InterceptorNamedMakeParamSettings) {
+        sb.write('Settings.getString(');
+        sb.write('"${param.settingKey}"');
+        if (param.defaultValue != null) {
+          sb.write(', defaultValue: "${param.defaultValue}"');
+        }
+        if (param.filterStr != null) {
+          sb.write(', settingsFilter: SettingsFilter.${param.filterStr}');
+        }
+        sb.write(')');
       }
       sb.write(',');
     }

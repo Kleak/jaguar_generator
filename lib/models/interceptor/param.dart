@@ -29,3 +29,16 @@ class InterceptorNamedMakeParamMethod implements InterceptorNamedParam {
 
   InterceptorNamedMakeParamMethod(this.key, this.methodName, this.isAsync);
 }
+
+class InterceptorNamedMakeParamSettings implements InterceptorNamedParam {
+  final String key;
+
+  final String settingKey;
+
+  final String defaultValue;
+
+  final String filterStr;
+
+  InterceptorNamedMakeParamSettings(
+      this.key, this.settingKey, this.defaultValue, this.filterStr);
+}

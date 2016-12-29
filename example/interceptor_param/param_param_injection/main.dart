@@ -47,7 +47,9 @@ class WrapWithParam implements RouteWrapper<WithParam> {
 
   final Map<Symbol, MakeParam> makeParams;
 
-  const WrapWithParam({this.param, this.id, this.makeParams});
+  final String setting;
+
+  const WrapWithParam({this.param, this.id, this.makeParams, this.setting});
 
   WithParam createInterceptor() => new WithParam(this.param);
 }
@@ -66,8 +68,11 @@ class ExampleApi extends Object with _$JaguarExampleApi {
   /// Example of basic route
   @Get(path: '/ping')
   @WrapUserProvider(model: user)
-  @WrapWithParam(
-      makeParams: const {#param: const MakeParamFromType(ParamUsesInjection)})
+  @WrapWithParam(makeParams: const {
+    #param: const MakeParamFromType(ParamUsesInjection),
+    #setting: const MakeParamFromSettings('host',
+        defaultValue: 'novalue', filter: SettingsFilter.Yaml)
+  })
   @Input(UserProvider)
   String ping(User model) => "You pinged me!";
 }

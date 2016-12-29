@@ -29,10 +29,14 @@ abstract class _$JaguarSubGroup implements RequestHandler {
     match =
         routes[0].match(request.uri.path, request.method, prefix, pathParams);
     if (match) {
-      Response rRouteResponse = new Response(null);
-      rRouteResponse.statusCode = 200;
-      rRouteResponse.value = normal();
-      await rRouteResponse.writeResponse(request.response);
+      Response<String> rRouteResponse0 = new Response(null);
+      try {
+        rRouteResponse0.statusCode = 200;
+        rRouteResponse0.value = normal();
+        await rRouteResponse0.writeResponse(request.response);
+      } catch (e) {
+        rethrow;
+      }
       return true;
     }
 
@@ -40,11 +44,15 @@ abstract class _$JaguarSubGroup implements RequestHandler {
     match =
         routes[1].match(request.uri.path, request.method, prefix, pathParams);
     if (match) {
-      Response rRouteResponse = new Response(null);
-      postRoute(
-        stringToInt(pathParams.getField('id')),
-      );
-      await rRouteResponse.writeResponse(request.response);
+      Response<dynamic> rRouteResponse0 = new Response(null);
+      try {
+        postRoute(
+          stringToInt(pathParams.getField('id')),
+        );
+        await rRouteResponse0.writeResponse(request.response);
+      } catch (e) {
+        rethrow;
+      }
       return true;
     }
 
@@ -52,11 +60,15 @@ abstract class _$JaguarSubGroup implements RequestHandler {
     match =
         routes[2].match(request.uri.path, request.method, prefix, pathParams);
     if (match) {
-      Response rRouteResponse = new Response(null);
-      voidRoute(
-        (pathParams.getField('id')),
-      );
-      await rRouteResponse.writeResponse(request.response);
+      Response<dynamic> rRouteResponse0 = new Response(null);
+      try {
+        voidRoute(
+          (pathParams.getField('id')),
+        );
+        await rRouteResponse0.writeResponse(request.response);
+      } catch (e) {
+        rethrow;
+      }
       return true;
     }
 
@@ -87,10 +99,14 @@ abstract class _$JaguarMotherGroup implements RequestHandler {
     match =
         routes[0].match(request.uri.path, request.method, prefix, pathParams);
     if (match) {
-      Response rRouteResponse = new Response(null);
-      rRouteResponse.statusCode = 200;
-      rRouteResponse.value = ping();
-      await rRouteResponse.writeResponse(request.response);
+      Response<String> rRouteResponse0 = new Response(null);
+      try {
+        rRouteResponse0.statusCode = 200;
+        rRouteResponse0.value = ping();
+        await rRouteResponse0.writeResponse(request.response);
+      } catch (e) {
+        rethrow;
+      }
       return true;
     }
 

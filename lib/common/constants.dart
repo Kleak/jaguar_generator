@@ -25,3 +25,6 @@ const NamedElement kTypeMakeParamFromType =
 
 const NamedElement kTypeMakeParamFromMethod =
     const NamedElementImpl.Make('MakeParamFromMethod', kLibraryAnnotation);
+
+const NamedElement kTypeMakeParamFromSettings =
+    const NamedElementImpl.Make('MakeParamFromSettings', kLibraryAnnotation);
