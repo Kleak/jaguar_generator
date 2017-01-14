@@ -148,12 +148,18 @@ class ToModelUpper {
       //Required parameter written in annotation
       List<InterceptorRequiredParam> req = [];
       for (int i = 0;
-          i < interceptor.constructor.requiredParameters.length;
+          i < interceptor.routeWrapper.annotation.argumentAst.length;
           i++) {
         var arg = interceptor.routeWrapper.annotation.argumentAst[i];
-        req.add(new InterceptorRequiredParam(
-            interceptor.constructor.requiredParameters[i].name,
-            arg.toString()));
+        ParameterElementWrap _param = interceptor
+            .routeWrapper.type.clazz.unnamedConstructor.parameters
+            .firstWhere(
+                (ParameterElementWrap pew) =>
+                    pew.name == arg.name.label.toString(),
+                orElse: () => null);
+        if (_param != null) {
+          req.add(new InterceptorRequiredParam(_param.name, arg.toString()));
+        }
       }
 
       //State parameter

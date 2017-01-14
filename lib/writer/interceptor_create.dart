@@ -62,6 +62,9 @@ class InterceptorCreateWriter {
         sb.write(', settingsFilter: SettingsFilter.${param.filterStr}');
       }
       sb.write(')');
+    } else {
+      print(param.source);
+      sb.write(param.source);
     }
     return sb.toString();
   }
