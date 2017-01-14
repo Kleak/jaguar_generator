@@ -2,8 +2,11 @@ part of jaguar_generator.models;
 
 class InterceptorRequiredParam {
   final String source;
+  final String key;
 
-  InterceptorRequiredParam(this.source);
+  InterceptorRequiredParam(this.key, this.source);
+
+  bool get shouldMakeFromParam => source == "makeFromParams";
 }
 
 abstract class InterceptorNamedParam {

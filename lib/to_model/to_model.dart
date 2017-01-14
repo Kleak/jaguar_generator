@@ -1,5 +1,6 @@
 library jaguar_generator.toModels;
 
+import 'package:analyzer/dart/element/element.dart';
 import 'package:jaguar_generator/parser/parser.dart';
 import 'package:jaguar_generator/models/models.dart';
 import 'package:source_gen_help/source_gen_help.dart';
@@ -146,8 +147,13 @@ class ToModelUpper {
     {
       //Required parameter written in annotation
       List<InterceptorRequiredParam> req = [];
-      for (dynamic arg in interceptor.routeWrapper.annotation.argumentAst) {
-        req.add(new InterceptorRequiredParam(arg.toString()));
+      for (int i = 0;
+          i < interceptor.constructor.requiredParameters.length;
+          i++) {
+        var arg = interceptor.routeWrapper.annotation.argumentAst[i];
+        req.add(new InterceptorRequiredParam(
+            interceptor.constructor.requiredParameters[i].name,
+            arg.toString()));
       }
 
       //State parameter
